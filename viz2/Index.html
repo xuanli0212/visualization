@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>HW2 Project1</title>
+	<style>
+		.link{
+			stroke: #ccc;
+			stroke-opacity: .6;
+		}
+
+		.node text{
+			pointer-events: none;
+			font: 10px sans-serif;
+			stroke-width: 1.5px;
+		}
+
+		.td{
+			border: 1px solid;
+			width: 20px;
+		}
+	</style>
+</head>
+
+<body>
+	<div>
+		<select id="degreeSelector" onchange="reload()">
+			<option>Show labels with larger Degree (>= 10)</option>
+			<option>Show all labels</option>
+		</select>
+	</div>
+	<div>
+		<table>
+			<tr>
+				<td id="td_2" class="td"></td>
+				<td>Liberal</td> 
+			</tr>
+			<tr>
+				<td id="td_3" class="td"></td>
+				<td>Conservative</td> 
+			</tr>
+			<tr>
+				<td id="td_1" class="td"></td>
+				<td>Neutral</td> 
+			</tr>
+		</table>
+	</div>
+	<div id = "svgforce">
+	</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+<script>
+var color = d3.scale.category10();
+var nodesdata1 = new Array();
+var nodesdata2 = new Array();
+var linksdata1 = new Array();
+var linksdata2 = new Array();
+
+var init = function(){
+	var groupvalue = {
+		n:1,
+		l:2,
+		c:3
+		
+	};
+
+	for(var i=1;i<4;i++){
+		document.getElementById("td_"+i).style.backgroundColor = color(i);
+	}
+
+	d3.csv("data/polbooks_nodes.csv", function(error, data){
+		if(error){
+			console.log(error);
+		}
+		else{
+			for(var i=0;i<data.length;i++){
+				var node1 = {};
+				var node2 = {};
+				node1.id = Number(data[i].Id);
+				if(Number(data[i].Degree)<10){
+					node1.name = '';
+				}
+				else{
+					node1.name = data[i].Label;
+				}
+				node1.group = groupvalue[data[i].Class];
+				node1.size = Number(data[i].Degree);
+				node2.id = Number(data[i].Id);
+				node2.name = data[i].Label;
+				node2.group = groupvalue[data[i].Class];
+				node2.size = Number(data[i].Degree);
+				nodesdata1.push(node1);
+				nodesdata2.push(node2);
+			}
+		}
+	});
+
+	d3.csv("data/polbooks_edges.csv", function(error, data){
+		if(error){
+			console.log(error);
+		}
+		else{
+			for(var i=0;i<data.length;i++){
+				var link1 = {};
+				var link2 = {};
+				link1.source = Number(data[i].Source);
+				link1.target = Number(data[i].Target);
+				link2.source = Number(data[i].Source);
+				link2.target = Number(data[i].Target);
+				linksdata1.push(link1);
+				linksdata2.push(link2);
+			}
+		}
+	});
+};
+
+var draw = function(degreerange){
+	var parent = document.getElementById("svgforce");
+	var child = parent.getElementsByTagName("svg")[0];
+	if(!!child){
+		parent.removeChild(child);
+	}
+
+	var width = 1000,
+		height = 550;
+
+	var force = d3.layout.force()
+		.gravity(.05)
+		.linkDistance(100)
+		.charge(-120)
+		.size([width, height]);
+
+	var svg = d3.select("#svgforce").append("svg")
+		.attr("width", width)
+		.attr("height", height);
+
+	force.stop();
+	if(degreerange == 0){
+		var nodesdata = nodesdata1;
+		var linksdata = linksdata1;
+	}
+	else if(degreerange == 1){
+		var nodesdata = nodesdata2;
+		var linksdata = linksdata2;
+	}
+
+	force
+		.nodes(nodesdata)
+		.links(linksdata);
+
+	var link = svg.selectAll(".link")
+		.data(linksdata)
+		.enter().append("line")
+		.attr("class", "link");
+
+	var node = svg.selectAll(".node")
+		.data(nodesdata)
+		.enter().append("g")
+		.attr("class", "node")
+		.call(force.drag);
+	node.append("circle")
+		.attr("r", function(d) { return Math.sqrt(d.size)*3; })
+		.style("fill", function(d) { return color(d.group); });
+	node.append("text")
+		.attr("class", "text")
+		.attr("dx", 12)
+		.attr("dy", ".35em")
+		.text(function(d) { return d.name });
+
+	force.on("tick", function(){
+		link.attr("x1", function(d) { return d.source.x; })
+			.attr("y1", function(d) { return d.source.y; })
+			.attr("x2", function(d) { return d.target.x; })
+			.attr("y2", function(d) { return d.target.y; });
+
+		node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+	});
+	force.start();
+};
+
+var reload = function(){
+	var range = document.getElementById("degreeSelector");
+	draw(range.selectedIndex);
+};
+
+var load = function(){
+	init();
+	setTimeout(function(){ draw(0); }, 1500);
+}
+
+load();
+
+</script>
+
+</body>
+</html>
