@@ -1,0 +1,53 @@
+body {
+	width: 960px;
+	margin: 0 auto;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 14px;
+	line-height: 20px;
+	background: black;
+}
+h2{
+	color: #FFF;
+}
+p{
+	color: #FFF;
+}
+h3{
+	color: #FFF;
+}
+div{
+	color: #FFF;
+}
+svg {
+	width: 1024px;
+	height: 600px;
+}
+.labels {
+	fill: #AAA;
+	font-weight: 200;
+	letter-spacing: -1px;
+}
+.labels.segment {
+	font-size: 18px;
+}
+path {
+	stroke: #777;
+	stroke-width: 0.5px;
+}
+.axis path,
+.axis line {
+	fill: none;
+	stroke: #000;
+	shape-rendering: crispEdges;
+}
+.x.axis path {
+	display: none;
+}
+.line {
+	fill: none;
+	stroke: steelblue;
+	stroke-width: 1.5px;
+}
+#info {
+	height: 20px;
+}

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Circular Heat Chart about Frequence of UFO occurrence</title>
+        <meta charset="UTF-8">
+         <link rel="stylesheet" type="text/css" href="styles/main.min.css">
+        <link rel="stylesheet" href="./css/circularheat.css">
+         <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
+         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+    </head>
+    <body>
+         <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="home.html">Visual USU - Visualizating UFO In United States</a>
+      </div>
+
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-right">
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Select Chart <span class="caret"></span></a>
+           
+             <ul class="dropdown-menu" role="menu">
+              <li><a href="map.html">Location</a></li>
+              <li><a href="circularheat.html">Time </a></li>
+              <li><a href="linechart.html">Shape</a></li>
+              <li><a href="wordcloud.html">Description </a></li>
+             
+
+
+            </ul>
+          </li>
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+  </nav>
+        <script src="./js/jquery-2.1.4.min.js" charset="utf-8"></script>
+        <script src="./js/circularHeatChart.js" charset="utf-8"></script>
+        <script src="./js/d3.v3.min.js" charset="utf-8"></script>
+        <h2>Time - When did you see the UFO?</h2>
+            <p>(a) looks at the number of UFO sightings in each month from 2004 to 2014, circular heat chart.</p> 
+            <p>(b) explores the peak time of UFO sightings in a day. Darker hue represents higher number of sightings.</p></br>
+	<h3>(a)Frequency of UFO occurrence in Month from 2004 to 2014 </h3>
+        <div id="chart1"></div>
+        <div id="info1">Put mouse over image to check value</div> </br>
+        <h3>(b)Frequency of UFO occurrence in Day from 2004 to 2014</h3>
+        <div id="chart2"></div>
+        <div id="info2">Put mouse over image to check value</div> 
+        <script>
+            d3.json('./data/mon.json', function(monData) {
+                var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
+                var years = [];
+                for(var i = 2004; i < 2015; i++)
+                    years.push(i);
+                var chart1 = circularHeatChart()
+                    .accessor(function(d1) {return d1.value;})
+                    .segmentHeight(22)
+                    .innerRadius(20)
+                    .numSegments(12)
+                    .range(['black', '#24FD95'])
+                    .radialLabels(years)
+                    .segmentLabels(months);
+                d3.select('#chart1')
+                    .selectAll('svg')
+                    .data([monData.datas])
+                    .enter()
+                    .append('svg')
+                    .call(chart1);
+                d3.selectAll("#chart1 path").on('mouseover', function() {
+                    var d1 = d3.select(this).data()[0];
+                    d3.select("#info1").text(d1.date + ' has value ' + d1.value);
+                });
+            });
+        </script>
+        <script>
+    
+            d3.json('./data/tim.json', function(timData) {
+                var hours = ["Midnight", "1am", "2am", "3am", "4am", "5am", "6am", "7am", "8am", "9am", "10am",
+                    "11am", "Midday", "1pm", "2pm", "3pm", "4pm", "5pm", "6pm", "7pm", "8pm", "9pm", "10pm", "11pm"];
+                var years = [];
+                for(var i = 2004; i < 2015; i++)
+                    years.push(i);
+                var chart2 = circularHeatChart()
+                    .accessor(function(d2) {return d2.value;})
+                    .segmentHeight(22)
+                    .innerRadius(20)
+                    .numSegments(24)
+                    .range(['black', '#24FD95'])
+                    .radialLabels(years)
+                    .segmentLabels(hours);
+                d3.select('#chart2')
+                    .selectAll('svg')
+                    .data([timData.datas])
+                    .enter()
+                    .append('svg')
+                    .call(chart2);
+                d3.selectAll("#chart2 path").on('mouseover', function() {
+                    var d2 = d3.select(this).data()[0];
+                    d3.select("#info2").text(d2.time + ' has value ' + d2.value);
+                });
+            });
+        </script>
+    </body>
+</html>

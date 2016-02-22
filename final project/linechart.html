@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Line Chart about Frequence of UFO occurrence</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" href="styles/main.min.css">
+
+ <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="./css/line.css">
+        <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
+         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="http://d3js.org/topojson.v1.min.js"></script>
+  <script src="libs/modernizr-2.0.6.min.js"></script> 
+
+    </head>
+    <body>
+         <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="home.html">Visual USU - Visualizating UFO In United States</a>
+      </div>
+
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-right">
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Select Chart <span class="caret"></span></a>
+           
+             <ul class="dropdown-menu" role="menu">
+              <li><a href="map.html">Location</a></li>
+              <li><a href="circularheat.html">Time </a></li>
+              <li><a href="linechart.html">Shape</a></li>
+              <li><a href="wordcloud.html">Description </a></li>
+             
+
+
+            </ul>
+          </li>
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+  </nav>
+        <script src="./js/jquery-2.1.4.min.js" charset="utf-8"></script>
+        <script src="./js/circularHeatChart.js" charset="utf-8"></script>
+        <script src="./js/d3.v3.min.js" charset="utf-8"></script>
+        <script src="./js/d3.tip.v0.6.3.js" charset="utf-8"></script>
+        <h2>Shapes: What did the UFO looks like? <h2>
+      
+        <p class ="annotation">(a).The bar chart compares the total numbers of sightings among 6 major shapes of UFOs from 2004 to 2014. 
+        </p>
+        <p class ="annotation">(b).The changes in number of each type of UFOs’ occurrence are demonstrated in the six line charts.
+        </p>
+        <br/>
+        <h3> (a)Top 6 Shapes of UFO</h3>    
+        <div id="chart0"></div>
+        
+        <br/>
+	   <h3>(b) Frequency of UFO occurrence in Month from 2004 to 2014 - by shape</h3>
+        <div id="chart1">
+            <div class="image">
+                <img alt="Light" src="img/light.png" />
+                <p>Light</p>
+            </div>
+        </div>
+        <br/>
+       
+        <div id="chart2">
+            <div class="image">
+                <img alt="Circle" src="img/circle.png" />
+                <p>Circle</p>
+            </div>
+        </div>
+        <br/>
+        
+        <div id="chart3">
+            <div class="image">
+                <img alt="Triangle" src="img/triangle.png" />
+                <p>Triangle</p>
+            </div>
+        </div>
+        <br/>
+       
+        <div id="chart4">
+            <div class="image">
+                <img alt="Fireball" src="img/fireball.png" />
+                <p>Fireball</p>
+            </div>
+        </div>
+        <br/>
+        
+        <div id="chart5">
+            <div class="image">
+                <img alt="Sphere" src="img/sphere.png" />
+                <p>Sphere</p>
+            </div>
+        </div>
+        <br/>
+        
+        <div id="chart6">
+            <div class="image">
+                <img alt="Disk" src="img/disk.png" />
+                <p>Disk</p>
+            </div>
+        </div>
+        <script>
+            var margin0 = {top: 20, right: 20, bottom: 30, left: 60},
+                width0 = 500 - margin0.right - margin0.left,
+                height0 = 400 - margin0.top - margin0.bottom;
+
+            var x0 = d3.scale.ordinal()
+                .rangeRoundBands([0, width0], .4);
+            var y0 = d3.scale.linear()
+                .range([height0, 0]);
+            var xAxis0 = d3.svg.axis()
+                .scale(x0)
+                .orient("bottom");
+            var yAxis0 = d3.svg.axis()
+                .scale(y0)
+                .orient("left")
+                .ticks(10);
+            var tip0 = d3.tip()
+                .attr('class', 'd3-tip')
+                .offset([-10, 0])
+                .html(function(d) {
+                    return "Number: <span style='color:orange'>" + d.number + "</span>";
+                })
+            var svg0 = d3.select("#chart0").append("svg")
+                .attr("width", width0 + margin0.left + margin0.right)
+                .attr("height", height0 + margin0.top + margin0.bottom)
+              .append("g")
+                .attr("transform", "translate(" + margin0.left + "," + margin0.top + ")");
+            svg0.call(tip0);
+
+            d3.tsv("./data/byShape.tsv", type, function(error, data) {
+                if (error) throw error;
+
+                x0.domain(data.map(function(d) { return d.shape; }));
+                y0.domain([0, d3.max(data, function(d) { return d.number; })]);
+
+                svg0.append("g")
+                    .attr("class", "x axis")
+                    .attr("transform", "translate(0," + height0 + ")")
+                    .call(xAxis0);
+                svg0.append("g")
+                      .attr("class", "y axis")
+                      .call(yAxis0);
+                svg0.selectAll(".bar")
+                      .data(data)
+                      .enter().append("rect")
+                      .attr("class", "bar")
+                      .attr("x", function(d) { return x0(d.shape); })
+                      .attr("width", x0.rangeBand())
+                      .attr("y", function(d) { return y0(d.number); })
+                      .attr("height", function(d) { return height0 - y0(d.number); })
+                      .on('mouseover', tip0.show)
+                      .on('mouseout', tip0.hide)
+            });
+
+            function type(d) {
+                d.number = +d.number;
+                return d;
+            }
+        </script>
+        <script>
+            var margin = {top: 20, right: 20, bottom: 30, left: 50},
+                width = 800 - margin.left - margin.right,
+                height = 400 - margin.top - margin.bottom;
+            var parseDate = d3.time.format("%Y%m").parse;
+            var formatTime = d3.time.format("%b %Y");
+
+            //Light Chart
+            var x1 = d3.time.scale()
+                .range([0, width]);
+            var y1 = d3.scale.linear()
+                .range([height, 0]);
+            var xAxis1 = d3.svg.axis()
+                .scale(x1)
+                .orient("bottom");
+            var yAxis1 = d3.svg.axis()
+                .scale(y1)
+                .orient("left");
+            var line1 = d3.svg.line()
+                .x(function(d) { return x1(d.date); })
+                .y(function(d) { return y1(d.value); });
+            var div1 = d3.select("#chart1").append("div")
+                .attr("class", "tooltip")
+                .style("opacity", 0);
+            var svg1 = d3.select("#chart1").append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            d3.json('./data/light.json', function(lightData) {
+                lightData.datas.forEach(function(d) {
+                    d.date = parseDate(d.date);
+                });
+                x1.domain(d3.extent(lightData.datas, function(d) { return d.date; }));
+                y1.domain(d3.extent(lightData.datas, function(d) { return d.value; }));
+
+                svg1.append("g")
+                    .attr("class", "x axis")
+                    .attr("transform", "translate(0," + height + ")")
+                    .call(xAxis1);
+                svg1.append("g")
+                    .attr("class", "y axis")
+                    .call(yAxis1)
+                    .append("text")
+                    .attr("transform", "rotate(-90)")
+                    .attr("y", 6)
+                    .attr("dy", ".71em")
+                    .style("text-anchor", "end")
+                    .text("Number");
+                svg1.append("path")
+                    .datum(lightData.datas)
+                    .attr("class", "line")
+                    .attr("d", line1);
+                svg1.selectAll("dot")
+                    .data(lightData.datas)
+                    .enter().append("circle")
+                    .attr("r", 5)
+                    .attr("fill","#24FD95")
+                    .attr("cx", function(d) { return x1(d.date); })
+                    .attr("cy", function(d) { return y1(d.value); })
+                    .on("mouseover", function(d) {
+                        div1.transition()
+                            .duration(200)
+                            .style("opacity", .9);
+                        div1.html(formatTime(d.date) + "<br/>"  + d.value)
+                            .style("left", (d3.event.pageX) + "px")
+                            .style("top", (d3.event.pageY - 28) + "px");
+                        })
+                    .on("mouseout", function(d) {
+                        div1.transition()
+                            .duration(500)
+                            .style("opacity", 0);
+                    });
+            });
+
+            //Circle Chart
+            var x2 = d3.time.scale()
+                .range([0, width]);
+            var y2 = d3.scale.linear()
+                .range([height, 0]);
+            var xAxis2 = d3.svg.axis()
+                .scale(x2)
+                .orient("bottom");
+            var yAxis2 = d3.svg.axis()
+                .scale(y2)
+                .orient("left");
+            var line2 = d3.svg.line()
+                .x(function(d) { return x2(d.date); })
+                .y(function(d) { return y2(d.value); });
+            var div2 = d3.select("#chart2").append("div")
+                .attr("class", "tooltip")
+                .style("opacity", 0);
+            var svg2 = d3.select("#chart2").append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            d3.json('./data/circle.json', function(circleData) {
+                circleData.datas.forEach(function(d) {
+                    d.date = parseDate(d.date);
+                });
+                x2.domain(d3.extent(circleData.datas, function(d) { return d.date; }));
+                y2.domain(d3.extent(circleData.datas, function(d) { return d.value; }));
+
+                svg2.append("g")
+                    .attr("class", "x axis")
+                    .attr("transform", "translate(0," + height + ")")
+                    .call(xAxis2);
+                svg2.append("g")
+                    .attr("class", "y axis")
+                    .call(yAxis2)
+                    .append("text")
+                    .attr("transform", "rotate(-90)")
+                    .attr("y", 6)
+                    .attr("dy", ".71em")
+                    .style("text-anchor", "end")
+                    .text("Number");
+                svg2.append("path")
+                    .datum(circleData.datas)
+                    .attr("class", "line")
+                    .attr("d", line2);
+                svg2.selectAll("dot")
+                    .data(circleData.datas)
+                    .enter().append("circle")
+                    .attr("r", 5)
+                    .attr("fill","#24FD95")
+                    .attr("cx", function(d) { return x2(d.date); })
+                    .attr("cy", function(d) { return y2(d.value); })
+                    .on("mouseover", function(d) {
+                        div2.transition()
+                            .duration(200)
+                            .style("opacity", .9);
+                        div2.html(formatTime(d.date) + "<br/>"  + d.value)
+                            .style("left", (d3.event.pageX) + "px")
+                            .style("top", (d3.event.pageY - 28) + "px");
+                        })
+                    .on("mouseout", function(d) {
+                        div2.transition()
+                            .duration(500)
+                            .style("opacity", 0);
+                    });
+            });
+
+            //Triangle Chart
+            var x3 = d3.time.scale()
+                .range([0, width]);
+            var y3 = d3.scale.linear()
+                .range([height, 0]);
+            var xAxis3 = d3.svg.axis()
+                .scale(x3)
+                .orient("bottom");
+            var yAxis3 = d3.svg.axis()
+                .scale(y3)
+                .orient("left");
+            var line3 = d3.svg.line()
+                .x(function(d) { return x3(d.date); })
+                .y(function(d) { return y3(d.value); });
+            var div3 = d3.select("#chart3").append("div")
+                .attr("class", "tooltip")
+                .style("opacity", 0);
+            var svg3 = d3.select("#chart3").append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            d3.json('./data/triangle.json', function(triangleData) {
+                triangleData.datas.forEach(function(d) {
+                    d.date = parseDate(d.date);
+                });
+                x3.domain(d3.extent(triangleData.datas, function(d) { return d.date; }));
+                y3.domain(d3.extent(triangleData.datas, function(d) { return d.value; }));
+
+                svg3.append("g")
+                    .attr("class", "x axis")
+                    .attr("transform", "translate(0," + height + ")")
+                    .call(xAxis3);
+                svg3.append("g")
+                    .attr("class", "y axis")
+                    .call(yAxis3)
+                    .append("text")
+                    .attr("transform", "rotate(-90)")
+                    .attr("y", 6)
+                    .attr("dy", ".71em")
+                    .style("text-anchor", "end")
+                    .text("Number");
+                svg3.append("path")
+                    .datum(triangleData.datas)
+                    .attr("class", "line")
+                    .attr("d", line3);
+                svg3.selectAll("dot")
+                    .data(triangleData.datas)
+                    .enter().append("circle")
+                    .attr("r", 5)
+                    .attr("fill","#24FD95")
+                    .attr("cx", function(d) { return x3(d.date); })
+                    .attr("cy", function(d) { return y3(d.value); })
+                    .on("mouseover", function(d) {
+                        div3.transition()
+                            .duration(200)
+                            .style("opacity", .9);
+                        div3.html(formatTime(d.date) + "<br/>"  + d.value)
+                            .style("left", (d3.event.pageX) + "px")
+                            .style("top", (d3.event.pageY - 28) + "px");
+                        })
+                    .on("mouseout", function(d) {
+                        div3.transition()
+                            .duration(500)
+                            .style("opacity", 0);
+                    });
+            });
+
+            //Fireball Chart
+            var x4 = d3.time.scale()
+                .range([0, width]);
+            var y4 = d3.scale.linear()
+                .range([height, 0]);
+            var xAxis4 = d3.svg.axis()
+                .scale(x4)
+                .orient("bottom");
+            var yAxis4 = d3.svg.axis()
+                .scale(y4)
+                .orient("left");
+            var line4 = d3.svg.line()
+                .x(function(d) { return x4(d.date); })
+                .y(function(d) { return y4(d.value); });
+            var div4 = d3.select("#chart4").append("div")
+                .attr("class", "tooltip")
+                .style("opacity", 0);
+            var svg4 = d3.select("#chart4").append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            d3.json('./data/fireball.json', function(fireballData) {
+                fireballData.datas.forEach(function(d) {
+                    d.date = parseDate(d.date);
+                });
+                x4.domain(d3.extent(fireballData.datas, function(d) { return d.date; }));
+                y4.domain(d3.extent(fireballData.datas, function(d) { return d.value; }));
+
+                svg4.append("g")
+                    .attr("class", "x axis")
+                    .attr("transform", "translate(0," + height + ")")
+                    .call(xAxis4);
+                svg4.append("g")
+                    .attr("class", "y axis")
+                    .call(yAxis4)
+                    .append("text")
+                    .attr("transform", "rotate(-90)")
+                    .attr("y", 6)
+                    .attr("dy", ".71em")
+                    .style("text-anchor", "end")
+                    .text("Number");
+                svg4.append("path")
+                    .datum(fireballData.datas)
+                    .attr("class", "line")
+                    .attr("d", line4);
+                svg4.selectAll("dot")
+                    .data(fireballData.datas)
+                    .enter().append("circle")
+                    .attr("r", 5)
+                    .attr("fill","#24FD95")
+                    .attr("cx", function(d) { return x4(d.date); })
+                    .attr("cy", function(d) { return y4(d.value); })
+                    .on("mouseover", function(d) {
+                        div4.transition()
+                            .duration(200)
+                            .style("opacity", .9);
+                        div4.html(formatTime(d.date) + "<br/>"  + d.value)
+                            .style("left", (d3.event.pageX) + "px")
+                            .style("top", (d3.event.pageY - 28) + "px");
+                        })
+                    .on("mouseout", function(d) {
+                        div4.transition()
+                            .duration(500)
+                            .style("opacity", 0);
+                    });
+            });
+
+            //Sphere Chart
+            var x5 = d3.time.scale()
+                .range([0, width]);
+            var y5 = d3.scale.linear()
+                .range([height, 0]);
+            var xAxis5 = d3.svg.axis()
+                .scale(x5)
+                .orient("bottom");
+            var yAxis5 = d3.svg.axis()
+                .scale(y5)
+                .orient("left");
+            var line5 = d3.svg.line()
+                .x(function(d) { return x5(d.date); })
+                .y(function(d) { return y5(d.value); });
+            var div5 = d3.select("#chart5").append("div")
+                .attr("class", "tooltip")
+                .style("opacity", 0);
+            var svg5 = d3.select("#chart5").append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            d3.json('./data/sphere.json', function(sphereData) {
+                sphereData.datas.forEach(function(d) {
+                    d.date = parseDate(d.date);
+                });
+                x5.domain(d3.extent(sphereData.datas, function(d) { return d.date; }));
+                y5.domain(d3.extent(sphereData.datas, function(d) { return d.value; }));
+
+                svg5.append("g")
+                    .attr("class", "x axis")
+                    .attr("transform", "translate(0," + height + ")")
+                    .call(xAxis5);
+                svg5.append("g")
+                    .attr("class", "y axis")
+                    .call(yAxis5)
+                    .append("text")
+                    .attr("transform", "rotate(-90)")
+                    .attr("y", 6)
+                    .attr("dy", ".71em")
+                    .style("text-anchor", "end")
+                    .text("Number");
+                svg5.append("path")
+                    .datum(sphereData.datas)
+                    .attr("class", "line")
+                    .attr("d", line5);
+                svg5.selectAll("dot")
+                    .data(sphereData.datas)
+                    .enter().append("circle")
+                    .attr("r", 5)
+                    .attr("fill","#24FD95")
+                    .attr("cx", function(d) { return x5(d.date); })
+                    .attr("cy", function(d) { return y5(d.value); })
+                    .on("mouseover", function(d) {
+                        div5.transition()
+                            .duration(200)
+                            .style("opacity", .9);
+                        div5.html(formatTime(d.date) + "<br/>"  + d.value)
+                            .style("left", (d3.event.pageX) + "px")
+                            .style("top", (d3.event.pageY - 28) + "px");
+                        })
+                    .on("mouseout", function(d) {
+                        div5.transition()
+                            .duration(500)
+                            .style("opacity", 0);
+                    });
+            });
+
+            //Disk Chart
+            var x6 = d3.time.scale()
+                .range([0, width]);
+            var y6 = d3.scale.linear()
+                .range([height, 0]);
+            var xAxis6 = d3.svg.axis()
+                .scale(x6)
+                .orient("bottom");
+            var yAxis6 = d3.svg.axis()
+                .scale(y6)
+                .orient("left");
+            var line6 = d3.svg.line()
+                .x(function(d) { return x6(d.date); })
+                .y(function(d) { return y6(d.value); });
+            var div6 = d3.select("#chart6").append("div")
+                .attr("class", "tooltip")
+                .style("opacity", 0);
+            var svg6 = d3.select("#chart6").append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            d3.json('./data/disk.json', function(diskData) {
+                diskData.datas.forEach(function(d) {
+                    d.date = parseDate(d.date);
+                });
+                x6.domain(d3.extent(diskData.datas, function(d) { return d.date; }));
+                y6.domain(d3.extent(diskData.datas, function(d) { return d.value; }));
+
+                svg6.append("g")
+                    .attr("class", "x axis")
+                    .attr("transform", "translate(0," + height + ")")
+                    .call(xAxis6);
+                svg6.append("g")
+                    .attr("class", "y axis")
+                    .call(yAxis6)
+                    .append("text")
+                    .attr("transform", "rotate(-90)")
+                    .attr("y", 6)
+                    .attr("dy", ".71em")
+                    .style("text-anchor", "end")
+                    .text("Number");
+                svg6.append("path")
+                    .datum(diskData.datas)
+                    .attr("class", "line")
+                    .attr("d", line6);
+                svg6.selectAll("dot")
+                    .data(diskData.datas)
+                    .enter().append("circle")
+                    .attr("r", 5)
+                    .attr("fill","#24FD95")
+                    .attr("cx", function(d) { return x6(d.date); })
+                    .attr("cy", function(d) { return y6(d.value); })
+                    .on("mouseover", function(d) {
+                        div6.transition()
+                            .duration(200)
+                            .style("opacity", .9);
+                        div6.html(formatTime(d.date) + "<br/>"  + d.value)
+                            .style("left", (d3.event.pageX) + "px")
+                            .style("top", (d3.event.pageY - 28) + "px");
+                        })
+                    .on("mouseout", function(d) {
+                        div6.transition()
+                            .duration(500)
+                            .style("opacity", 0);
+                    });
+            });
+        </script>
+    </body>
+</html>

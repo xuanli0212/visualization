@@ -1,0 +1,81 @@
+body {
+	width: 960px;
+	margin: 0 auto;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 14px;
+	line-height: 20px;
+	background: black;
+}
+h3{
+	color: #FFF;
+}
+h2{
+	color: white;
+}
+.axis path,
+.axis line {
+	fill: none;
+	stroke: silver;
+	stroke-width: 1;
+	shape-rendering: crispEdges;
+}
+.axis text {
+	fill: #24FD95;
+}
+div.tooltip {
+	position: absolute;
+	text-align: center;
+	width: 60px;
+	height: 28px;
+	padding: 2px;
+	font: 12px sans-serif;
+	background: lightsteelblue;
+	border: 0px;
+	border-radius: 8px;
+	pointer-events: none;
+}
+path {
+	stroke: steelblue;
+	stroke-width: 2;
+	fill: none;
+}
+.bar {
+	fill: #24fd95;
+}
+.bar:hover {
+	fill: white;
+}
+.d3-tip {
+	margin-top: 0px;
+	line-height: 1;
+	font-size: 12px;
+	padding: 12px;
+	background: rgba(0, 0, 0, 0.8);
+	color: #fff;
+	border-radius: 2px;
+}
+.image{
+	position: relative;
+	left: 0%;
+	width: 10%;
+	float: left;
+}
+img{
+	width: 100%;
+}
+p{
+	color: #24fd95;
+	font-weight: bold;
+	text-align: center;
+}
+
+.annotation{
+	color: white;
+	text-align: left;
+	font-weight: normal;
+	font-size: 15px;
+}
+svg{
+	position: relative;
+	width: 90%;
+}

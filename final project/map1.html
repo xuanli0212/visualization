@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <title>Information Visualization Final Project</title>
+ 
+ <link rel="stylesheet" type="text/css" href="styles/main.min.css">
+  <link rel="stylesheet" type="text/css" href="styles/d3.css">
+  <link rel="stylesheet" type="text/css" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/>
+  <link href='https://api.mapbox.com/mapbox.js/v2.2.3/mapbox.css' rel='stylesheet' />
+  <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" />
+  
+<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="http://d3js.org/topojson.v1.min.js"></script>
+  <script src="libs/modernizr-2.0.6.min.js"></script> 
+  <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+<script src='https://api.mapbox.com/mapbox.js/v2.2.3/mapbox.js'></script>
+
+ <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/libs/modernizr-2.0.6.min.js"></script>
+
+<style type="text/css">
+body {
+    background-color: 'black';
+}
+
+
+ .background {
+  fill: black;
+  pointer-events: all;
+  
+}
+
+#states {
+  fill: #aaa;
+}
+
+#states .active {
+  fill: orange;
+}
+
+#state-borders {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 1.5px;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  pointer-events: none;
+}
+ #map{ 
+  position:absolute;
+  top:400px;
+
+  width: 800px;
+  height: 500px; 
+  left:20px;
+}
+ .container{ 
+  position:absolute;
+
+  top:1000px;
+  bottom:40px;
+  width: 1200px;
+  height: 500px; 
+  left:80px;
+  color:'black';
+}
+ 
+ .chiprange {
+  position:absolute;
+  top:300px;
+  width:900px;
+  left:20px;
+
+  }
+.leaflet-top .leaflet-control-zoom {
+  top:300px;
+
+  }
+ 
+            </style>
+
+  </head>
+
+<body>
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="home.html">Visual USU - Visualizating UFO In United States</a>
+      </div>
+
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-right">
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Select Chart <span class="caret"></span></a>
+           
+             <ul class="dropdown-menu" role="menu">
+              <li><a href="map.html">Location</a></li>
+              <li><a href="linechart.html">Time </a></li>
+              <li><a href="circularheat.html">Shape</a></li>
+              <li><a href="wordcloud.html">Description </a></li>
+             
+
+
+            </ul>
+          </li>
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+  </nav>
+
+<script src="data/all.js"></script>
+  <script src="data/us-state.js"></script>
+
+ <div class="container-fluid">
+    <div class="row-fluid">
+      <h1>US: The Best Location to witness a UFO </h1>
+      <h5>   A proportional symbol map that looks at the geographical information of UFO sightings from 2004 to 2014. Use the arrow buttons to explore information of different years. Each bubble marks the location at which UFOs were sighted, with the size of the bubble representing the number of UFO reports received. A population density layer can be added manually by users to compare population and sightings information. Zoom-in feature is also availabe.
+
+      </h5>
+     </div> 
+    </div>
+
+ <div>
+ </br>
+
+
+<li><a href="map.html" onmouseover="mOver(this)" onmouseout="mOut(this)">Remove Population Density</a></li>
+   
+</select>
+
+</div>
+
+</br>
+</br>
+ <p style="color:black ">
+<label for="year" style="color:black;">Year :</label>
+<input type="text" id="year" style="border:0; color:black; font-weight:bold; " />
+</p>
+<div  id="slider" style="color: color:#23FA96; position: absolute; top:350px; left:250px; width: 600px;"></div>
+
+  
+  <div id="map" ></div>
+</br>
+ 
+   
+
+
+    <script>
+    $.getScript("all.js");
+
+//     function load(script) {
+ //   document.write('<'+'script src="'+script+'" type="text/javascript"><' + '/script>');
+  //     }
+
+
+
+  
+
+     $("#slider").slider({
+          value:2004,
+          min: 2004,
+          max: 2014,
+          step: 1,
+
+          slide: function( event, ui ) {
+            $("#year").val(ui.value);
+            redraw(ui.value.toString());
+          }
+          });
+
+      $("#year").val($("#slider").slider("value") );
+
+   
+  L.mapbox.accessToken = 'pk.eyJ1IjoieHVhbmxpMDIxMiIsImEiOiJjaWh0ZWtwOXcwMTYzdGZraHExMGpndnRoIn0.UyUEi3mt77vJz3GLosNCyQ';
+ 
+  // load a tile layer
+  var map = L.mapbox.map('map',null,{maxZoom:18}).setView([37.8, -96], 4);
+  L.mapbox.tileLayer('mapbox.outdoors',{maxZoom: 18,}).addTo(map);
+  
+  var layers = {
+      Dark: L.mapbox.tileLayer('mapbox.dark'),
+      Outdoors: L.mapbox.tileLayer('mapbox.outdoors'),
+      Satellite: L.mapbox.tileLayer('mapbox.satellite')
+  };
+
+  layers.Dark.addTo(map);
+  L.control.layers(layers).addTo(map);
+
+  function getColor(d) {
+      return d > 1000 ? '#000000' :
+             d > 500  ? '#252525' :
+             d > 200  ? '#252525' :
+             d > 100  ? '#525252' :
+             d > 50   ? '#737373' :
+             d > 20   ? '#969696' :
+             d > 10   ? '#bdbdbd' :
+                        '#bdbdbd';
+    }
+
+function style(feature) {
+      return {
+        weight: 0.5,
+        opacity: 1,
+        color: 'white',
+        dashArray: '3',
+        fillOpacity: 0.8,
+        fillColor: getColor(feature.properties.density)
+      };
+    }
+
+
+
+    geojson = L.geoJson(statesData, {
+      style: style,
+    }).addTo(map);
+
+    map.attributionControl.addAttribution('Population data &copy; <a href="http://census.gov/">US Census Bureau</a>');
+
+
+
+function highlightFeature1(e) {
+      var layer = e.target;
+
+      layer.setStyle({
+        fillColor: "#E61C30",
+           color: "#F7BD1D",  
+            opacity: 1,
+          fillOpacity: 0.6,    
+      });
+
+      if (!L.Browser.ie && !L.Browser.opera) {
+        layer.bringToFront();
+      }
+    }
+
+    function resetHighlight1(e) {
+      var layer = e.target;
+
+      layer.setStyle({
+        fillColor: "#02B108",
+           color: "#038E07",  
+            opacity: 0.8,
+          fillOpacity: 0.4,
+           
+      });
+      layer.bringToBack();  
+    }
+
+
+   
+
+
+var geojsonLayer = L.geoJson(geojsonFeature, {
+    pointToLayer: function(feature, latlng) {
+
+        return new L.circleMarker(latlng, {
+           radius: Math.sqrt(feature.properties["2004"])*3 ,
+           fillColor: "#02B108",
+           color: "#038E07",  
+            opacity: 0.8,
+          fillOpacity: 0.4,      
+          });
+
+    },
+
+    onEachFeature: function (feature, layer) {
+        layer.bindPopup(feature.properties.title +" : " + feature.properties["2004"]);
+        layer.on('mouseover', function (e) {
+            this.openPopup();
+            highlightFeature1(e);
+           
+        });
+        layer.on('mouseout', function (e) {
+            this.closePopup();
+            resetHighlight1(e);
+           
+        });
+         
+       } 
+      });
+   
+
+        map.addLayer(geojsonLayer);  
+
+       
+
+
+
+        function redraw(year) {
+
+         // geojsonLayer.refresh();
+          map.removeLayer(geojsonLayer);
+          geojsonLayer = L.geoJson(geojsonFeature, {
+    pointToLayer: function(feature, latlng) {
+
+        return new L.circleMarker(latlng, {
+           radius: Math.sqrt(feature.properties[year])*3 ,
+           fillColor: "#02B108",
+           color: "#038E07",  
+            opacity: 0.8,
+          fillOpacity: 0.4,      
+          });
+
+    },
+
+    onEachFeature: function (feature, layer) {
+        layer.bindPopup(feature.properties.title +" : " + feature.properties[year]);
+        layer.on('mouseover', function (e) {
+            this.openPopup();
+             highlightFeature1(e);
+           
+        });
+        layer.on('mouseout', function (e) {
+            this.closePopup();
+            resetHighlight1(e);
+           
+        });
+         
+       } 
+      });
+
+         
+
+        } 
+       
+    
+
+     
+    
+
+  </script>
+  <div class="container" >
+    <h2 align="center">The Trend of UFO Reports by States</h2>
+    <h5 align="center"> A set of small multiples is offered to demonstrate the trend of UFO sightings in each of the 50 States in the US.</h5>
+
+   <div id="main">
+      <div id="button-wrap">
+        <div id="count" class="button active">COUNT</div>
+        <div id="name" class="button">NAME</div>
+      </div>
+      
+      <div id="vis"></div>
+    </div>
+  </div> <!--! end of #container -->
+
+
+  <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script> -->
+  <script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.2.min.js"><\/script>')</script>
+
+
+  <script src="js/libs/coffee-script.js"></script>
+  <script src="js/libs/isotope.pkgd.min.js"></script>
+  <script src="js/libs/d3.js"></script>
+  <script src="js/libs/queue.min.js"></script>
+  <script type="text/coffeescript" src="coffee/small_multiples.coffee"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+    });
+  </script>
+ 
+
+  
+
+</body>

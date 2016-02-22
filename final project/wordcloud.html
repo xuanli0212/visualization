@@ -1,0 +1,194 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <title>Information Visualization Final Project</title>
+
+  
+<link href="http://netdna.bootstrapcdn.com/bootswatch/3.1.1/spacelab/bootstrap.min.css" rel="stylesheet">
+ <link rel="stylesheet" type="text/css" href="styles/main.min.css">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="styles/d3.css"> 
+  <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" />
+  
+<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="http://d3js.org/topojson.v1.min.js"></script>
+  <script src="libs/modernizr-2.0.6.min.js"></script> 
+ 
+ <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style.css">
+
+ 
+    <style type="text/css">
+      body {
+        margin-top: 0px;
+        background-color: black；
+      }
+      #cloud { border-radius:3px;border:1px solid #d0d0d0; }
+      #cloud span { cursor: pointer; }
+      #chartContainer{
+        background-color: black
+      }
+
+
+    </style>
+
+  </head>
+
+  <body role="document">
+
+    <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="home.html">Visual USU - Visualizating UFO In United States</a>
+      </div>
+
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-right">
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Select Chart <span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="map.html">Location</a></li>
+              <li><a href="linechart.html">Time </a></li>
+              <li><a href="circularheat.html">Shape</a></li>
+              <li><a href="wordcloud.html">Description </a></li>
+             
+
+
+            </ul>
+          </li>
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+  </nav>
+
+    <h1>Word Cloud of UFO Reports</h1>
+ 
+    <h5>Words most frequently appeared in the descriptions of UFO sightings reports are showcased in the word cloud. </h5>
+   <h5>   The larger the size of the word, the more frequently it was mentioned.
+</h5>
+    <h5>Click on a word to see the number of occurrences.</h5>  
+
+    <div class="canvas">
+      
+    
+  <div class="chartContainer" id="wordCloud">    
+    <div class="page-header">
+      <label style="color:#23FA96">SHAPE:</label>
+        
+    <strong><select style="" id="selected_data">
+            <option value="all">ALL</option>
+            <option value="circle">Circle</option>
+             <option value="triangle">Triangle</option>
+            <option value="disk">Disk</option>
+             <option value="sphere">Sphere</option>
+            <option value="light">Light</option>
+             <option value="fireball">Fireball</option>
+            
+            
+        </select></strong>
+
+    <div id="cloud" style="width:100%;height:600px;position:relative;"></div>
+    <strong><div id="details" style="width:100%;text-align:center;line-height:2em;margin-top:0.5em;color:white;"></div></strong>
+  </div>
+  <br/>
+  <br/>
+  </div>
+    </div> <!-- /container -->
+
+
+    <!-- Le JavaScripts-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="js/spin.min.js" charset="utf-8"></script>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="js/moment.js"></script>
+    <script src="js/wordcloud2.js"></script>
+    
+
+
+    <script>
+var all=[[' lights ', 112 ],[' bright ', 48 ],[' moving ', 40 ],[' orange ', 40 ],[' red ', 36.5 ],[' white ', 36.5 ],[' shaped ', 29.5 ],[' flying ', 29.5 ],[' craft ', 27.5 ],[' two ', 27.5 ],[' like ', 27.5 ],[' objects ', 26.5 ],[' large ', 25.5 ],[' note ', 25.5 ],[' nuforc ', 25 ],[' night ', 25 ],[' across ', 24.5 ],[' hovering ', 24.5 ],[' one ', 24.5 ],[' triangle ', 24 ],[' fast ', 23.5 ],[' green ', 23 ],[' north ', 23 ],[' blue ', 22.5 ],[' star ', 22.5 ],[' shape ', 22.5 ],[' formation ', 22 ],[' south ', 22 ],[' west ', 22 ],[' east ', 21.5 ],[' slowly ', 21 ],[' three ', 21 ],[' glowing ', 21 ],[' flashing ', 20.5 ],[' fireball ', 20.5 ],[' high ', 20.5 ],[' low ', 20.5 ],[' ball ', 20 ],[' sighting ', 19.5 ],[' triangular ', 19.5 ],[' speed ', 19.5 ],[' strange ', 19 ],[' around ', 19 ],[' disappeared ', 19 ],[' sound ', 19 ],[' moved ', 18.5 ],[' traveling ', 18.5 ],[' looked ', 18.5 ],[' near ', 18 ],[' round ', 18 ],[' appeared ', 18 ],[' orb ', 17.5 ],[' circular ', 17 ],[' orbs ', 17 ],[' minutes ', 16.5 ],[' sphere ', 16.5 ],[' black ', 16.5 ],[' just ', 16.5 ],[' slow ', 16.5 ],[' small ', 16 ],[' silent ', 15.5 ],[' observed ', 15 ],[' oval ', 15 ],[' area ', 15 ],[' aircraft ', 15 ],[' line ', 15 ],[' away ', 14.5 ],[' possible ', 14.5 ],[' spotted ', 14.5 ],[' blinking ', 14.5 ],[' stationary ', 14.5 ],[' seconds ', 14.5 ],[' fire ', 14 ],[' went ', 14 ],[' yellow ', 14 ],[' flew ', 14 ],[' back ', 14 ],[' ufos ', 14 ],[' looking ', 14 ],[' color ', 13.5 ],[' circle ', 13.5 ],[' driving ', 13.5 ],[' four ', 13 ],[' direction ', 13 ],[' noticed ', 13 ],[' floating ', 13 ],[' silver ', 13 ],[' time ', 13 ],[' side ', 13 ],[' straight ', 13 ],[' changing ', 13 ],[' going ', 13 ],[' lake ', 13 ],[' stars ', 13 ],[' altitude ', 13 ],[' house ', 13 ],[' outside ', 12.5 ],[' balls ', 12.5 ],[' flash ', 12.5 ],[' dark ', 12.5 ],[' quickly ', 12.5 ],[' see ', 12.5 ],[' ground ', 12.5 ],[' beach ', 12.5 ],[' clear ', 12.5 ],[' several ', 12.5 ],[' hoax ', 12.5 ],[' witnessed ', 12.5 ],[' right ', 12.5 ],[' plane ', 12.5 ],[' colored ', 12.5 ],[' hovered ', 12.5 ],[' horizon ', 12 ],[' air ', 12 ],[' first ', 12 ],[' big ', 12 ],[' fireballs ', 12 ],[' huge ', 12 ],[' noise ', 12 ],[' move ', 11.5 ],[' towards ', 11.5 ],[' left ', 11.5 ],[' changed ', 11.5 ],[' home ', 11.5 ],[' close ', 11.5 ],[' multiple ', 11.5 ],[' clouds ', 11.5 ],[' spheres ', 11.5 ],[' disappearing ', 11.5 ],[' heading ', 11.5 ],[' cigar ', 11.5 ],[' moon ', 11.5 ],[' city ', 11 ],[' report ', 11 ],[' new ', 11 ],[' disk ', 11 ],[' extremely ', 11 ],[' came ', 11 ],[' different ', 11 ],[' colors ', 11 ],[' feet ', 11 ],[' county ', 10.5 ],[' silently ', 10.5 ],[' cloud ', 10.5 ],[' long ', 10.5 ],[' sighted ', 10.5 ],[' amber ', 10.5 ],[' ocean ', 10.5 ],[' falling ', 10.5 ],[' behind ', 10.5 ],[' followed ', 10.5 ],[' pulsating ', 10.5 ],[' redorange ', 10.5 ],[' thought ', 10.5 ],[' coming ', 10.5 ],[' made ', 10.5 ],[' pattern ', 10.5 ],[' shooting ', 10.5 ],[' vanished ', 10 ],[' venus ', 10 ],[' western ', 10 ],[' san ', 10 ],[' front ', 10 ],[' rate ', 10 ],[' saucer ', 10 ],[' times ', 10 ],[' space ', 10 ],[' diamond ', 10 ],[' overhead ', 10 ],[' suddenly ', 10 ],[' july ', 10 ],[' size ', 10 ],[' disappears ', 9.5 ],[' trail ', 9.5 ],[' tree ', 9.5 ],[' seemed ', 9.5 ],[' another ', 9.5 ],[' eastern ', 9.5 ],[' lit ', 9.5 ],[' turned ', 9.5 ],[' something ', 9.5 ],[' five ', 9.5 ],[' reddish ', 9.5 ],[' crafts ', 9.5 ],[' day ', 9.5 ],[' look ', 9.5 ],[' meteor ', 9.5 ],[' stopped ', 9.5 ],[' fly ', 9.5 ],[' california ', 9.5 ],[' many ', 9 ],[' morning ', 9 ],[' car ', 9 ],[' florida ', 9 ]];
+
+var light=[[' light ', 136 ],[' sky ', 58 ],[' bright ', 57 ],[' moving ', 44 ],[' white ', 38 ],[' orange ', 36 ],[' red ', 36 ],[' object ', 31 ],[' star ', 29 ],[' two ', 29 ],[' note ', 28 ],[' nuforc ', 28 ],[' across ', 26 ],[' like ', 26 ],[' fast ', 25 ],[' night ', 25 ],[' one ', 24 ],[' flying ', 22 ],[' north ', 22 ],[' slowly ', 22 ],[' west ', 22 ],[' east ', 22 ],[' south ', 21 ],[' hovering ', 21 ],[' green ', 21 ],[' blue ', 21 ],[' disappeared ', 20 ],[' high ', 20 ],[' strange ', 20 ],[' flashing ', 20 ],[' moved ', 20 ],[' objects ', 20 ],[' speed ', 20 ],[' sighting ', 20 ],[' three ', 19 ],[' traveling ', 19 ],[' formation ', 19 ],[' large ', 19 ],[' ball ', 18 ],[' appeared ', 18 ],[' around ', 17 ],[' stationary ', 17 ],[' minutes ', 17 ],[' near ', 17 ],[' looked ', 16 ],[' sound ', 16 ],[' glowing ', 16 ],[' blinking ', 16 ],[' small ', 16 ],[' low ', 15 ],[' possible ', 15 ],[' away ', 15 ],[' stars ', 15 ],[' just ', 15 ],[' orb ', 15 ],[' slow ', 15 ],[' direction ', 14 ],[' line ', 14 ],[' orbs ', 14 ],[' observed ', 14 ],[' seconds ', 14 ],[' venus ', 14 ],[' horizon ', 14 ],[' move ', 14 ],[' straight ', 13 ],[' area ', 13 ],[' disappearing ', 13 ],[' changing ', 13 ],[' four ', 13 ],[' went ', 13 ],[' time ', 13 ],[' quickly ', 13 ],[' back ', 13 ],[' noticed ', 13 ],[' starlike ', 13 ],[' yellow ', 13 ],[' several ', 13 ],[' aircraft ', 13 ],[' altitude ', 12 ],[' lake ', 12 ],[' changed ', 12 ],[' right ', 12 ],[' craft ', 12 ],[' suddenly ', 12 ],[' silent ', 12 ],[' extremely ', 12 ],[' looking ', 12 ],[' round ', 12 ],[' first ', 12 ],[' spotted ', 12 ],[' plane ', 12 ],[' beach ', 12 ],[' faded ', 12 ],[' color ', 12 ],[' disappears ', 12 ],[' moves ', 11 ],[' witnessed ', 11 ],[' big ', 11 ],[' different ', 11 ],[' colored ', 11 ],[' space ', 11 ],[' going ', 11 ],[' iss ', 11 ],[' times ', 11 ],[' vanished ', 11 ],[' outside ', 11 ],[' ocean ', 11 ],[' shooting ', 11 ],[' single ', 11 ],[' satellite ', 11 ],[' thought ', 11 ],[' colors ', 11 ],[' flash ', 11 ],[' flew ', 11 ],[' amber ', 11 ],[' circular ', 11 ],[' side ', 11 ],[' western ', 11 ],[' clouds ', 11 ],[' multiple ', 11 ],[' pattern ', 11 ],[' shaped ', 11 ],[' left ', 11 ],[' triangle ', 11 ],[' ufos ', 11 ],[' another ', 11 ],[' clear ', 11 ],[' eastern ', 11 ],[' hovered ', 11 ],[' rapidly ', 11 ],[' floating ', 11 ],[' directions ', 11 ],[' moon ', 10 ],[' see ', 10 ],[' shape ', 10 ],[' ground ', 10 ],[' new ', 10 ],[' balls ', 10 ],[' house ', 10 ],[' driving ', 10 ],[' heading ', 10 ],[' shot ', 10 ],[' pulsating ', 10 ],[' redorange ', 10 ],[' southern ', 10 ],[' stopped ', 10 ],[' towards ', 10 ],[' came ', 10 ],[' followed ', 10 ],[' county ', 10 ],[' fading ', 10 ],[' home ', 10 ],[' morning ', 10 ],[' san ', 10 ],[' brighter ', 10 ],[' air ', 10 ],[' rate ', 10 ],[' report ', 10 ],[' approximately ', 9 ],[' solid ', 9 ],[' close ', 9 ],[' disappear ', 9 ],[' turned ', 9 ],[' size ', 9 ],[' twinkling ', 9 ],[' city ', 9 ],[' behind ', 9 ],[' brilliant ', 9 ],[' noise ', 9 ],[' point ', 9 ],[' seemed ', 9 ],[' still ', 9 ],[' making ', 9 ],[' dim ', 9 ],[' falling ', 9 ],[' flickering ', 9 ],[' sirius ', 9 ],[' speeds ', 9 ],[' appears ', 9 ],[' northern ', 9 ],[' park ', 9 ],[' second ', 9 ],[' cloud ', 9 ],[' five ', 9 ],[' pulsing ', 9 ],[' mountain ', 9 ],[' started ', 9 ],[' together ', 9 ],[' gone ', 9 ],[' many ', 9 ],[' toward ', 9 ],[' long ', 8 ],[' made ', 8 ],[' overhead ', 8 ],[' texas ', 8 ],[' florida ', 8 ]];
+
+var triangle = [[' lights ', 45 ],[' triangle ', 42 ],[' triangular ', 36 ],[' object ', 31 ],[' craft ', 30 ],[' shaped ', 28 ],[' sky ', 26 ],[' red ', 24 ],[' light ', 24 ],[' white ', 23 ],[' bright ', 23 ],[' flying ', 22 ],[' moving ', 22 ],[' shape ', 21 ],[' ufo ', 20 ],[' saw ', 20 ],[' three ', 20 ],[' large ', 20 ],[' seen ', 19 ],[' black ', 18 ],[' low ', 18 ],[' hovering ', 18 ],[' orange ', 18 ],[' one ', 16 ],[' formation ', 15 ],[' night ', 15 ],[' two ', 15 ],[' silent ', 15 ],[' sound ', 15 ],[' objects ', 14 ],[' slowly ', 14 ],[' slow ', 14 ],[' fast ', 14 ],[' like ', 13 ],[' south ', 13 ],[' north ', 13 ],[' flashing ', 13 ],[' across ', 12 ],[' aircraft ', 12 ],[' blue ', 12 ],[' near ', 12 ],[' flew ', 12 ],[' spotted ', 12 ],[' east ', 12 ],[' green ', 12 ],[' west ', 12 ],[' note ', 11 ],[' nuforc ', 11 ],[' sighting ', 11 ],[' speed ', 11 ],[' just ', 11 ],[' strange ', 11 ],[' high ', 11 ],[' blinking ', 11 ],[' dark ', 10 ],[' around ', 10 ],[' huge ', 10 ],[' looked ', 10 ],[' driving ', 10 ],[' glowing ', 10 ],[' moved ', 10 ],[' appeared ', 9 ],[' house ', 9 ],[' noise ', 9 ],[' outside ', 9 ],[' back ', 9 ],[' disappeared ', 9 ],[' silently ', 9 ],[' traveling ', 9 ],[' ufos ', 9 ],[' observed ', 9 ],[' center ', 9 ],[' area ', 9 ],[' home ', 9 ],[' time ', 9 ],[' side ', 9 ],[' see ', 9 ],[' bottom ', 8 ],[' hovered ', 8 ],[' star ', 8 ],[' big ', 8 ],[' hoax ', 8 ],[' made ', 8 ],[' minutes ', 8 ],[' close ', 8 ],[' yellow ', 8 ],[' city ', 8 ],[' overhead ', 8 ],[' witnessed ', 8 ],[' away ', 8 ],[' corner ', 8 ],[' report ', 8 ],[' small ', 8 ],[' air ', 8 ],[' ground ', 8 ],[' looking ', 8 ],[' stars ', 8 ],[' crafts ', 8 ],[' triangles ', 8 ],[' altitude ', 8 ],[' dim ', 8 ],[' possible ', 8 ],[' lake ', 8 ],[' noticed ', 8 ],[' seconds ', 8 ],[' quickly ', 8 ],[' lighted ', 7 ],[' clear ', 7 ],[' color ', 7 ],[' feet ', 7 ],[' fly ', 7 ],[' heading ', 7 ],[' went ', 7 ],[' line ', 7 ],[' sighted ', 7 ],[' colored ', 7 ],[' form ', 7 ],[' highway ', 7 ],[' pattern ', 7 ],[' san ', 7 ],[' corners ', 7 ],[' front ', 7 ],[' plane ', 7 ],[' going ', 7 ],[' point ', 7 ],[' county ', 7 ],[' four ', 7 ],[' right ', 7 ],[' tree ', 7 ],[' first ', 7 ],[' multiple ', 7 ],[' several ', 7 ],[' towards ', 7 ],[' beach ', 6 ],[' lit ', 6 ],[' road ', 6 ],[' texas ', 6 ],[' california ', 6 ],[' orbs ', 6 ],[' solid ', 6 ],[' field ', 6 ],[' new ', 6 ],[' park ', 6 ],[' stationary ', 6 ],[' circular ', 6 ],[' floating ', 6 ],[' friend ', 6 ],[' left ', 6 ],[' something ', 6 ],[' car ', 6 ],[' seemed ', 6 ],[' different ', 6 ],[' look ', 6 ],[' move ', 6 ],[' ohio ', 6 ],[' direction ', 6 ],[' extremely ', 6 ],[' forming ', 6 ],[' middle ', 6 ],[' round ', 6 ],[' gliding ', 6 ],[' straight ', 6 ],[' almost ', 6 ],[' approximately ', 6 ],[' moon ', 6 ],[' work ', 6 ],[' changing ', 6 ],[' clouds ', 6 ],[' followed ', 6 ],[' making ', 6 ],[' triangleshaped ', 6 ],[' way ', 6 ],[' directly ', 6 ],[' horizon ', 6 ],[' hwy ', 6 ],[' long ', 6 ],[' loud ', 6 ],[' behind ', 5 ],[' coming ', 5 ],[' passed ', 5 ],[' ship ', 5 ],[' trees ', 5 ],[' airport ', 5 ],[' formed ', 5 ],[' hover ', 5 ],[' rate ', 5 ],[' smaller ', 5 ],[' turned ', 5 ],[' along ', 5 ],[' amber ', 5 ],[' came ', 5 ],[' perfect ', 5 ],[' pulsating ', 5 ],[' stopped ', 5 ],[' valley ', 5 ],[' witnesses ', 5 ],[' approx ', 5 ],[' cloud ', 5 ],[' headed ', 5 ],[' many ', 5 ]];
+
+var sphere=[[' sphere ', 29 ],[' sky ', 28 ],[' orange ', 28 ],[' bright ', 25 ],[' object ', 24 ],[' light ', 23 ],[' moving ', 22 ],[' white ', 20 ],[' red ', 19 ],[' spheres ', 19 ],[' lights ', 19 ],[' orb ', 18 ],[' seen ', 18 ],[' orbs ', 16 ],[' glowing ', 16 ],[' flying ', 16 ],[' two ', 15 ],[' spherical ', 14 ],[' objects ', 14 ],[' saw ', 14 ],[' hovering ', 14 ],[' across ', 14 ],[' ball ', 13 ],[' north ', 13 ],[' like ', 13 ],[' south ', 13 ],[' round ', 13 ],[' west ', 13 ],[' large ', 13 ],[' green ', 13 ],[' blue ', 12 ],[' night ', 12 ],[' ufo ', 12 ],[' one ', 12 ],[' east ', 12 ],[' fast ', 12 ],[' note ', 12 ],[' nuforc ', 12 ],[' high ', 12 ],[' speed ', 11 ],[' traveling ', 11 ],[' slowly ', 11 ],[' three ', 11 ],[' low ', 10 ],[' around ', 10 ],[' silver ', 10 ],[' disappeared ', 10 ],[' sighting ', 10 ],[' moved ', 10 ],[' near ', 10 ],[' observed ', 10 ],[' star ', 10 ],[' formation ', 10 ],[' shaped ', 10 ],[' appeared ', 10 ],[' craft ', 9 ],[' small ', 9 ],[' stationary ', 9 ],[' just ', 9 ],[' minutes ', 9 ],[' silent ', 9 ],[' black ', 9 ],[' area ', 9 ],[' looked ', 8 ],[' slow ', 8 ],[' spotted ', 8 ],[' flashing ', 8 ],[' color ', 8 ],[' beach ', 8 ],[' metallic ', 8 ],[' yellow ', 8 ],[' colored ', 8 ],[' floating ', 8 ],[' line ', 8 ],[' sound ', 8 ],[' back ', 8 ],[' feet ', 8 ],[' straight ', 8 ],[' balls ', 8 ],[' seconds ', 8 ],[' away ', 8 ],[' flew ', 7 ],[' shape ', 7 ],[' strange ', 7 ],[' multiple ', 7 ],[' altitude ', 7 ],[' redorange ', 7 ],[' witnessed ', 7 ],[' time ', 7 ],[' ufos ', 7 ],[' four ', 7 ],[' heading ', 7 ],[' pulsating ', 7 ],[' lake ', 7 ],[' size ', 7 ],[' fire ', 7 ],[' looking ', 7 ],[' possible ', 7 ],[' quickly ', 7 ],[' reddish ', 7 ],[' july ', 7 ],[' aircraft ', 7 ],[' cloud ', 7 ],[' san ', 7 ],[' direction ', 7 ],[' horizon ', 7 ],[' several ', 7 ],[' changing ', 6 ],[' county ', 6 ],[' going ', 6 ],[' hovered ', 6 ],[' silently ', 6 ],[' amber ', 6 ],[' moon ', 6 ],[' noticed ', 6 ],[' towards ', 6 ],[' circular ', 6 ],[' clear ', 6 ],[' disappearing ', 6 ],[' ground ', 6 ],[' jet ', 6 ],[' orangered ', 6 ],[' plane ', 6 ],[' clouds ', 6 ],[' see ', 6 ],[' big ', 6 ],[' rate ', 6 ],[' shiny ', 6 ],[' sighted ', 6 ],[' air ', 6 ],[' colors ', 6 ],[' daylight ', 6 ],[' driving ', 6 ],[' move ', 6 ],[' went ', 6 ],[' behind ', 6 ],[' first ', 6 ],[' ocean ', 6 ],[' right ', 6 ],[' skies ', 6 ],[' came ', 6 ],[' close ', 6 ],[' house ', 6 ],[' left ', 6 ],[' blinking ', 6 ],[' new ', 6 ],[' northern ', 6 ],[' city ', 6 ],[' report ', 6 ],[' airport ', 6 ],[' coming ', 6 ],[' disappears ', 6 ],[' tree ', 6 ],[' changed ', 5 ],[' circle ', 5 ],[' dark ', 5 ],[' day ', 5 ],[' disappear ', 5 ],[' followed ', 5 ],[' hoax ', 5 ],[' made ', 5 ],[' outside ', 5 ],[' people ', 5 ],[' rapidly ', 5 ],[' stars ', 5 ],[' brilliant ', 5 ],[' fireworks ', 5 ],[' florida ', 5 ],[' space ', 5 ],[' noise ', 5 ],[' shot ', 5 ],[' side ', 5 ],[' single ', 5 ],[' together ', 5 ],[' travelling ', 5 ],[' approximately ', 5 ],[' california ', 5 ],[' coast ', 5 ],[' eastern ', 5 ],[' road ', 5 ],[' speeds ', 5 ],[' times ', 5 ],[' triangle ', 5 ],[' witnesses ', 5 ],[' 4th ', 5 ],[' fly ', 5 ],[' huge ', 5 ],[' stopped ', 5 ],[' trail ', 5 ],[' video ', 5 ],[' western ', 5 ],[' extremely ', 5 ],[' following ', 5 ],[' home ', 5 ],[' making ', 5 ],[' overhead ', 5 ],[' second ', 5 ],[' car ', 5 ],[' different ', 5 ],[' directions ', 5 ]];
+
+var fireball=[[' fireball ', 38 ],[' sky ', 38 ],[' orange ', 36 ],[' bright ', 26 ],[' light ', 25 ],[' moving ', 23 ],[' fireballs ', 23 ],[' ball ', 22 ],[' red ', 22 ],[' object ', 22 ],[' fire ', 21 ],[' seen ', 20 ],[' lights ', 19 ],[' across ', 19 ],[' like ', 19 ],[' saw ', 18 ],[' green ', 18 ],[' glowing ', 17 ],[' flying ', 16 ],[' large ', 16 ],[' north ', 16 ],[' objects ', 15 ],[' west ', 15 ],[' south ', 15 ],[' two ', 15 ],[' night ', 15 ],[' east ', 15 ],[' balls ', 14 ],[' traveling ', 14 ],[' slowly ', 14 ],[' one ', 13 ],[' white ', 13 ],[' looked ', 13 ],[' orbs ', 13 ],[' note ', 13 ],[' falling ', 13 ],[' nuforc ', 13 ],[' disappeared ', 12 ],[' orb ', 12 ],[' hovering ', 12 ],[' low ', 12 ],[' fast ', 12 ],[' three ', 12 ],[' appeared ', 11 ],[' ufo ', 11 ],[' meteor ', 11 ],[' minutes ', 11 ],[' slow ', 11 ],[' formation ', 11 ],[' speed ', 11 ],[' blue ', 10 ],[' moved ', 10 ],[' looking ', 10 ],[' just ', 10 ],[' star ', 10 ],[' high ', 10 ],[' around ', 10 ],[' tail ', 10 ],[' floating ', 10 ],[' near ', 10 ],[' sighting ', 10 ],[' round ', 10 ],[' sound ', 10 ],[' went ', 10 ],[' driving ', 10 ],[' ground ', 10 ],[' witnessed ', 10 ],[' lake ', 9 ],[' redorange ', 9 ],[' seconds ', 9 ],[' possible ', 9 ],[' towards ', 9 ],[' orangered ', 9 ],[' line ', 9 ],[' observed ', 9 ],[' craft ', 9 ],[' area ', 9 ],[' away ', 9 ],[' july ', 9 ],[' yellow ', 9 ],[' horizon ', 9 ],[' four ', 9 ],[' going ', 9 ],[' beach ', 9 ],[' strange ', 9 ],[' silent ', 8 ],[' shooting ', 8 ],[' direction ', 8 ],[' shape ', 8 ],[' shaped ', 8 ],[' trail ', 8 ],[' fiery ', 8 ],[' coming ', 8 ],[' first ', 8 ],[' huge ', 8 ],[' see ', 8 ],[' spotted ', 8 ],[' outside ', 8 ],[' flaming ', 8 ],[' house ', 8 ],[' straight ', 8 ],[' altitude ', 8 ],[' back ', 8 ],[' flew ', 8 ],[' heading ', 8 ],[' came ', 7 ],[' city ', 7 ],[' county ', 7 ],[' flame ', 7 ],[' western ', 7 ],[' burning ', 7 ],[' several ', 7 ],[' big ', 7 ],[' disappearing ', 7 ],[' flash ', 7 ],[' reddish ', 7 ],[' silently ', 7 ],[' small ', 7 ],[' sphere ', 7 ],[' toward ', 7 ],[' behind ', 7 ],[' close ', 7 ],[' time ', 7 ],[' home ', 7 ],[' hovered ', 7 ],[' noticed ', 7 ],[' people ', 7 ],[' southern ', 7 ],[' thought ', 7 ],[' type ', 7 ],[' changed ', 7 ],[' new ', 7 ],[' triangle ', 7 ],[' side ', 7 ],[' quickly ', 7 ],[' flashing ', 7 ],[' florida ', 7 ],[' long ', 7 ],[' streak ', 7 ],[' approximately ', 7 ],[' report ', 7 ],[' left ', 6 ],[' disappears ', 6 ],[' glow ', 6 ],[' multiple ', 6 ],[' noise ', 6 ],[' ocean ', 6 ],[' earth ', 6 ],[' plane ', 6 ],[' right ', 6 ],[' seemed ', 6 ],[' circular ', 6 ],[' flickering ', 6 ],[' followed ', 6 ],[' ohio ', 6 ],[' sighted ', 6 ],[' ufos ', 6 ],[' 4th ', 6 ],[' air ', 6 ],[' color ', 6 ],[' faded ', 6 ],[' tree ', 6 ],[' turned ', 6 ],[' another ', 6 ],[' feet ', 6 ],[' fell ', 6 ],[' five ', 6 ],[' hoax ', 6 ],[' streaking ', 6 ],[' aircraft ', 6 ],[' clear ', 6 ],[' look ', 6 ],[' overhead ', 6 ],[' pulsating ', 6 ],[' san ', 6 ],[' california ', 6 ],[' northwest ', 6 ],[' stopped ', 6 ],[' wife ', 6 ],[' 2012 ', 6 ],[' disappear ', 6 ],[' last ', 6 ],[' move ', 6 ],[' northern ', 6 ],[' sight ', 6 ],[' something ', 6 ],[' different ', 6 ],[' evening ', 6 ],[' later ', 6 ],[' shot ', 6 ],[' vanished ', 6 ],[' headed ', 6 ],[' walking ', 6 ],[' fireworks ', 5 ],[' second ', 5 ],[' southwest ', 5 ],[' changing ', 5 ],[' front ', 5 ],[' island ', 5 ],[' made ', 5 ]];
+
+var disk=[[' object ', 24 ],[' lights ', 21 ],[' sky ', 20 ],[' disk ', 19 ],[' saucer ', 18 ],[' shaped ', 18 ],[' ufo ', 18 ],[' bright ', 16 ],[' light ', 15 ],[' seen ', 15 ],[' flying ', 15 ],[' saw ', 15 ],[' disc ', 15 ],[' craft ', 14 ],[' hovering ', 14 ],[' red ', 14 ],[' moving ', 13 ],[' white ', 13 ],[' orange ', 11 ],[' like ', 11 ],[' objects ', 11 ],[' around ', 11 ],[' note ', 10 ],[' nuforc ', 10 ],[' silver ', 10 ],[' two ', 10 ],[' shape ', 10 ],[' one ', 10 ],[' sighting ', 10 ],[' large ', 10 ],[' blue ', 10 ],[' flashing ', 9 ],[' night ', 9 ],[' fast ', 9 ],[' low ', 9 ],[' green ', 9 ],[' south ', 8 ],[' across ', 8 ],[' near ', 8 ],[' east ', 8 ],[' glowing ', 8 ],[' ufos ', 8 ],[' round ', 8 ],[' west ', 8 ],[' minutes ', 8 ],[' north ', 8 ],[' slowly ', 8 ],[' circular ', 8 ],[' hoax ', 7 ],[' appeared ', 7 ],[' black ', 7 ],[' looked ', 7 ],[' area ', 7 ],[' three ', 7 ],[' strange ', 7 ],[' air ', 7 ],[' driving ', 7 ],[' high ', 7 ],[' just ', 7 ],[' speed ', 7 ],[' clear ', 7 ],[' spotted ', 7 ],[' top ', 7 ],[' moved ', 7 ],[' dark ', 6 ],[' sound ', 6 ],[' home ', 6 ],[' house ', 6 ],[' picture ', 6 ],[' away ', 6 ],[' report ', 6 ],[' aircraft ', 6 ],[' back ', 6 ],[' bottom ', 6 ],[' clouds ', 6 ],[' disappeared ', 6 ],[' disks ', 6 ],[' flew ', 6 ],[' yellow ', 6 ],[' daylight ', 6 ],[' beach ', 6 ],[' hovered ', 6 ],[' left ', 6 ],[' observed ', 6 ],[' side ', 6 ],[' small ', 6 ],[' day ', 6 ],[' ground ', 6 ],[' metallic ', 6 ],[' see ', 6 ],[' traveling ', 6 ],[' colored ', 6 ],[' sighted ', 6 ],[' took ', 6 ],[' feet ', 6 ],[' huge ', 6 ],[' outside ', 6 ],[' pictures ', 6 ],[' time ', 6 ],[' went ', 6 ],[' blinking ', 6 ],[' cloud ', 6 ],[' looking ', 6 ],[' noticed ', 6 ],[' possible ', 6 ],[' star ', 6 ],[' lake ', 5 ],[' photo ', 5 ],[' shiny ', 5 ],[' slow ', 5 ],[' california ', 5 ],[' floating ', 5 ],[' going ', 5 ],[' noise ', 5 ],[' seconds ', 5 ],[' close ', 5 ],[' color ', 5 ],[' many ', 5 ],[' new ', 5 ],[' rotating ', 5 ],[' came ', 5 ],[' city ', 5 ],[' made ', 5 ],[' moon ', 5 ],[' stationary ', 5 ],[' way ', 5 ],[' caught ', 5 ],[' center ', 5 ],[' formation ', 5 ],[' gone ', 5 ],[' field ', 5 ],[' lit ', 5 ],[' saucers ', 5 ],[' spinning ', 5 ],[' taking ', 5 ],[' airplane ', 5 ],[' camera ', 5 ],[' discs ', 5 ],[' first ', 5 ],[' four ', 5 ],[' gray ', 5 ],[' plane ', 5 ],[' silent ', 5 ],[' towards ', 5 ],[' car ', 5 ],[' flight ', 5 ],[' lighted ', 5 ],[' right ', 5 ],[' sitting ', 5 ],[' taken ', 5 ],[' washington ', 5 ],[' witness ', 5 ],[' altitude ', 5 ],[' big ', 5 ],[' crafts ', 5 ],[' diskshaped ', 5 ],[' line ', 5 ],[' ship ', 5 ],[' witnesses ', 5 ],[' behind ', 5 ],[' ocean ', 5 ],[' pulsating ', 5 ],[' quickly ', 5 ],[' second ', 5 ],[' still ', 5 ],[' texas ', 5 ],[' video ', 5 ],[' witnessed ', 5 ],[' coming ', 4 ],[' disappearing ', 4 ],[' flash ', 4 ],[' fly ', 4 ],[' road ', 4 ],[' several ', 4 ],[' straight ', 4 ],[' broad ', 4 ],[' colors ', 4 ],[' different ', 4 ],[' glow ', 4 ],[' highway ', 4 ],[' july ', 4 ],[' may ', 4 ],[' morning ', 4 ],[' overhead ', 4 ],[' pattern ', 4 ],[' smaller ', 4 ],[' thought ', 4 ],[' airport ', 4 ],[' direction ', 4 ],[' photos ', 4 ],[' size ', 4 ],[' something ', 4 ],[' vanished ', 4 ],[' watching ', 4 ],[' another ', 4 ],[' friend ', 4 ],[' got ', 4 ],[' long ', 4 ],[' move ', 4 ],[' rate ', 4 ]];
+
+var circle =[[' light ', 102 ],[' bright ', 49 ],[' orange ', 49 ],[' moving ', 41 ],[' circular ', 72 ],[' white ', 40 ],[' red ', 39 ],[' round ', 34 ],[' flying ', 31 ],[' seen ', 31 ],[' two ', 28 ],[' like ', 27 ],[' ufo ', 27 ],[' large ', 26 ],[' ball ', 26 ],[' across ', 26 ],[' night ', 25 ],[' one ', 25 ],[' blue ', 25 ],[' glowing ', 25 ],[' north ', 24 ],[' green ', 24 ],[' note ', 24 ],[' nuforc ', 24 ],[' orb ', 23 ],[' west ', 23 ],[' fast ', 23 ],[' hovering ', 23 ],[' slowly ', 23 ],[' star ', 23 ],[' craft ', 22 ],[' disappeared ', 22 ],[' east ', 22 ],[' south ', 22 ],[' orbs ', 22 ],[' moved ', 21 ],[' around ', 21 ],[' high ', 21 ],[' speed ', 20 ],[' flashing ', 20 ],[' looked ', 20 ],[' traveling ', 19 ],[' three ', 18 ],[' sighting ', 18 ],[' shaped ', 18 ],[' small ', 18 ],[' sound ', 18 ],[' low ', 18 ],[' appeared ', 18 ],[' formation ', 18 ],[' minutes ', 18 ],[' shape ', 18 ],[' circles ', 17 ],[' near ', 17 ],[' strange ', 17 ],[' just ', 16 ],[' balls ', 16 ],[' seconds ', 16 ],[' went ', 16 ],[' slow ', 15 ],[' spotted ', 15 ],[' going ', 15 ],[' away ', 15 ],[' yellow ', 15 ],[' fire ', 15 ],[' straight ', 15 ],[' flew ', 14 ],[' ufos ', 14 ],[' back ', 14 ],[' black ', 14 ],[' beach ', 14 ],[' line ', 14 ],[' looking ', 14 ],[' direction ', 14 ],[' silent ', 14 ],[' area ', 14 ],[' side ', 14 ],[' color ', 14 ],[' quickly ', 14 ],[' floating ', 14 ],[' possible ', 14 ],[' observed ', 14 ],[' moon ', 14 ],[' noticed ', 14 ],[' right ', 14 ],[' outside ', 13 ],[' lake ', 13 ],[' ground ', 13 ],[' ocean ', 13 ],[' big ', 13 ],[' house ', 13 ],[' left ', 13 ],[' stationary ', 13 ],[' blinking ', 13 ],[' silver ', 13 ],[' hovered ', 13 ],[' sphere ', 13 ],[' time ', 13 ],[' towards ', 13 ],[' air ', 13 ],[' colored ', 13 ],[' four ', 13 ],[' move ', 13 ],[' plane ', 12 ],[' reddish ', 12 ],[' hoax ', 12 ],[' clear ', 12 ],[' clouds ', 12 ],[' multiple ', 12 ],[' dark ', 12 ],[' size ', 12 ],[' driving ', 12 ],[' see ', 12 ],[' several ', 12 ],[' stars ', 12 ],[' close ', 12 ],[' first ', 12 ],[' witnessed ', 12 ],[' behind ', 12 ],[' home ', 12 ],[' colors ', 12 ],[' feet ', 12 ],[' heading ', 12 ],[' disappearing ', 11 ],[' huge ', 11 ],[' redorange ', 11 ],[' triangle ', 11 ],[' new ', 11 ],[' sighted ', 11 ],[' aircraft ', 11 ],[' came ', 11 ],[' coming ', 11 ],[' changing ', 11 ],[' altitude ', 11 ],[' july ', 11 ],[' horizon ', 11 ],[' different ', 11 ],[' followed ', 11 ],[' rate ', 11 ],[' five ', 11 ],[' cloud ', 10 ],[' times ', 10 ],[' tree ', 10 ],[' vanished ', 10 ],[' pulsating ', 10 ],[' appear ', 10 ],[' look ', 10 ],[' suddenly ', 10 ],[' made ', 10 ],[' noise ', 10 ],[' extremely ', 10 ],[' shooting ', 10 ],[' amber ', 10 ],[' another ', 10 ],[' day ', 10 ],[' glow ', 10 ],[' orangered ', 10 ],[' pattern ', 10 ],[' together ', 10 ],[' venus ', 10 ],[' changed ', 10 ],[' people ', 10 ],[' shot ', 10 ],[' smaller ', 10 ],[' disappears ', 10 ],[' disk ', 10 ],[' falling ', 10 ],[' fireball ', 10 ],[' fly ', 10 ],[' trees ', 10 ],[' airplane ', 9 ],[' disc ', 9 ],[' rotating ', 9 ],[' silently ', 9 ],[' toward ', 9 ],[' trail ', 9 ],[' eastern ', 9 ],[' park ', 9 ],[' still ', 9 ],[' took ', 9 ],[' airport ', 9 ],[' gone ', 9 ],[' moves ', 9 ],[' sight ', 9 ],[' western ', 9 ],[' city ', 9 ],[' crafts ', 9 ],[' evening ', 9 ],[' seemed ', 9 ],[' sitting ', 9 ],[' thought ', 9 ],[' almost ', 9 ],[' appearing ', 9 ],[' appears ', 9 ]];
+
+
+
+
+     function updateLegend(tags) {
+            
+
+            WordCloud(document.getElementById('cloud'), {
+              gridSize: 15, 
+              weightFactor: 6, 
+              rotateRatio: 0.5,
+              list : tags.map(function(word) { return [word[0], Math.round(word[1]/5)]; }), 
+              wait: 10
+            });
+            console.log(tags.map(function(word) { return [word[0], Math.round(word[1]/2)]; }));
+            //console.log(tagMap);
+            
+            var clicked = function(ev) {
+              if (ev.target.nodeName === "SPAN") {
+                var tag = ev.target.textContent;
+                var tagElem;
+                if (tags.some(function(el) { if (el[0] === tag) {tagElem = el; return true;} return false; })) {
+                document.getElementById("details").innerText = "There were " + tagElem[1] + 
+                    " mentions of “" + tag + "” in the last year";
+                }
+              } else {
+                document.getElementById("details").innerText = "";
+              }
+            }
+            document.getElementById("cloud").addEventListener("click", clicked)
+          };
+          
+        updateLegend(all);
+
+         d3.select('#selected_data')
+              .on('change', function() {
+                var newData = eval(d3.select(this).property('value'));
+                updateLegend(newData);
+            });
+
+
+              
+      
+      function isNumeric(n) {
+        return !isNaN(parseFloat(n)) && isFinite(n);
+      }
+      function matches(eVal,argList) {
+         for (var i=1; i<arguments.length;i++)
+          if (arguments[i] == eVal)
+            return true;
+      }
+    </script>
+
+
+  </body>
+</html>
+Status API Training Shop Blog About Pricing
+© 2015 GitHub, Inc. Terms Privacy Security Contact Help
