@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="styles/nv.d3.css" rel="stylesheet"/>
+<meta charset="utf-8">
+<title>IV Project1</title>
+<link rel="stylesheet" type="text/css" href="styles/main.min.css">
+  <!-- styles for drawing the SVG -->
+<link rel="stylesheet" type="text/css" href="styles/d3.css">
+<link rel="stylesheet" href="styles/d3.slider.css" />
+
+<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" />
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+<script src="d3.v3.min.js"></script>
+<script src="nv.d3.min.js"></script>
+<style>
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  position: relative;
+}
+path.slice{
+	stroke-width:2px;
+}
+polyline{
+	opacity: .3;
+	stroke: black;
+	stroke-width: 2px;
+	fill: none;
+} 
+svg text.percent{
+	fill:white;
+	text-anchor:middle;
+	font-size:12px;
+}
+
+</style>
+<body>
+
+	<nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">US Census Survey on Poverty</a>
+      </div>
+
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-right">
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Select Chart <span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="index-line.html">Q1: US Census on Poverty - Race -Line Chart  </a></li>
+              <li><a href="index-pie.html">Q1: US Census on Poverty - Race -Pie Chart  </a></li>
+              <li><a href="1.20.html">Q1: US Census on Poverty- Race-stack</a></li>
+              <li><a href="byStates2007withPercentage.html">Q2: US Census on Poverty - State Change </a></li>
+              <li><a href="q3-n.html">Q3: US Census on Poverty- Poor Number</a></li>
+              <li><a href="q3.html">Q3: US Census on Poverty- Poverty Rate</a></li>
+              <li><a href="q3_race.html">Q3: US Census on Poverty- Race</a></li>
+
+            </ul>
+          </li>
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+  </nav>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="Donut3D.js"></script>
+<a style="border:2px solid; padding:5px;" href="#" onClick="changeData('prev')">prev</a>
+<a id = 'year' style="margin:10px;font-size:20px">2002</a>
+<a style="border:2px solid; padding:5px;" href="#" onClick="changeData('next')">next</a>
+<ul style="float:left">
+	<li style="background-color:#3366CC; border:1px solid"></li><span>White Alone</span>
+	<li style="background-color:#DC3912; border:1px solid"></li><span>Black Alone</span>
+	<li style="background-color:#FF9900; border:1px solid"></li><span>Asian Alone</span>
+	<li style="background-color:#109618;border:1px solid"></li><span>Others or more races</span>
+</ul>
+
+<script>
+
+
+var svg = d3.select("body").append("svg").attr("width",700).attr("height",300);
+
+svg.append("g").attr("id","salesDonut");
+svg.append("g").attr("id","quotesDonut");
+var arr1 = [
+	{label:"Basic", color:"#3366CC",value:"67.9"},
+	{label:"Plus", color:"#DC3912", value:"24.9"},
+	{label:"Lite", color:"#FF9900", value:"3.4"},
+	{label:"Elite", color:"#109618", value:"3.8"}
+];
+var arr2 = [
+	{label:"Basic", color:"#3366CC",value:"67.7"},
+	{label:"Plus", color:"#DC3912", value:"24.9"},
+	{label:"Lite", color:"#FF9900", value:"3.9"},
+	{label:"Elite", color:"#109618", value:"3.9"}
+];
+var arr3 = [
+	{label:"Basic", color:"#3366CC",value:"68.4"},
+	{label:"Plus", color:"#DC3912", value:"24.3"},
+	{label:"Lite", color:"#FF9900", value:"3.2"},
+	{label:"Elite", color:"#109618", value:"4.1"}
+];
+var arr4 = [
+	{label:"Basic", color:"#3366CC",value:"67.3"},
+	{label:"Plus", color:"#DC3912", value:"24.8"},
+	{label:"Lite", color:"#FF9900", value:"3.8"},
+	{label:"Elite", color:"#109618", value:"4.1"}
+];
+var arr5 = [
+	{label:"Basic", color:"#3366CC",value:"67"},
+	{label:"Plus", color:"#DC3912", value:"24.8"},
+	{label:"Lite", color:"#FF9900", value:"3.7"},
+	{label:"Elite", color:"#109618", value:"4.5"}
+];
+var arr6 = [
+	{label:"Basic", color:"#3366CC",value:"67.4"},
+	{label:"Plus", color:"#DC3912", value:"24.8"},
+	{label:"Lite", color:"#FF9900", value:"3.6"},
+	{label:"Elite", color:"#109618", value:"4.2"}
+];
+var arr7 = [
+	{label:"Basic", color:"#3366CC",value:"67.8"},
+	{label:"Plus", color:"#DC3912", value:"23.5"},
+	{label:"Lite", color:"#FF9900", value:"4"},
+	{label:"Elite", color:"#109618", value:"4.7"}
+];
+var arr8 = [
+	{label:"Basic", color:"#3366CC",value:"68.5"},
+	{label:"Plus", color:"#DC3912", value:"22.8"},
+	{label:"Lite", color:"#FF9900", value:"4"},
+	{label:"Elite", color:"#109618", value:"4.7"}
+];
+var arr9 = [
+	{label:"Basic", color:"#3366CC",value:"67.1"},
+	{label:"Plus", color:"#DC3912", value:"23.2"},
+	{label:"Lite", color:"#FF9900", value:"4.1"},
+	{label:"Elite", color:"#109618", value:"5.6"}
+];
+var arr10 = [
+	{label:"Basic", color:"#3366CC",value:"66.7"},
+	{label:"Plus", color:"#DC3912", value:"23.5"},
+	{label:"Lite", color:"#FF9900", value:"4.1"},
+	{label:"Elite", color:"#109618", value:"6.1"}
+];
+var arr11 = [
+	{label:"Basic", color:"#3366CC",value:"66.3"},
+	{label:"Plus", color:"#DC3912", value:"23.5"},
+	{label:"Lite", color:"#FF9900", value:"4.1"},
+	{label:"Elite", color:"#109618", value:"6.1"}
+];
+var arr12 = [
+	{label:"Basic", color:"#3366CC",value:"66.1"},
+	{label:"Plus", color:"#DC3912", value:"24.4"},
+	{label:"Lite", color:"#FF9900", value:"3.9"},
+	{label:"Elite", color:"#109618", value:"5.6"}
+];
+
+
+
+
+var arr = new Array(arr1,arr2,arr3,arr4,arr5,arr6,arr7,arr8,arr9,arr10,arr11,arr12);
+var i=0;
+Donut3D.draw("salesDonut", Data(arr[i]), 150, 150, 130, 100, 30, 0.4);
+//Donut3D.draw("quotesDonut", randomData(), 450, 150, 130, 100, 30, 0);
+	
+function changeData(value){
+	if(value == "prev"){
+		if(i>0){
+			i--;
+			document.getElementById("year").innerHTML=Number(i)+2002;
+			//alert(arr3);
+			Donut3D.transition("salesDonut", Data(arr[i]), 130, 100, 30, 0.4);
+		}else{
+			alert("no more data");
+		}
+	}else{
+		if(i<=11){
+			//alert(arr[i]);
+			i++;
+			document.getElementById("year").innerHTML=Number(i)+2002;
+			Donut3D.transition("salesDonut", Data(arr[i]), 130, 100, 30, 0.4);
+		}else{
+			alert("no more data");
+		}
+	}
+	
+	//Donut3D.transition("quotesDonut", randomData(), 130, 100, 30, 0);
+}
+
+function Data(d){
+	
+	return d.map(function(d){ 
+		return {label:d.label, value:d.value, color:d.color};});
+}
+
+</script>
+</body>

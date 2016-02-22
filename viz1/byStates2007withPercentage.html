@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+  <meta charset="utf-8">
+  <title>IV Project1</title>
+  <link rel="stylesheet" type="text/css" href="styles/main.min.css">
+  <!-- styles for drawing the SVG -->
+  <link rel="stylesheet" type="text/css" href="styles/d3.css">
+  <link rel="stylesheet" href="styles/d3.slider.css" />
+
+<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" />
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+<style>
+
+
+*{
+  margin-top: 10px;
+}
+
+.y.axisLeft text {
+    fill: steelblue;
+}
+.y.axisRight text {
+    fill: lightsteelblue;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.bar1 {
+  fill: steelblue;
+}
+
+.bar1:hover {
+  fill: orange;
+}
+
+.bar2 {
+  fill: lightsteelblue;
+}
+
+.bar2:hover {
+  fill: gold;
+}
+
+.axis {
+  font: 10px sans-serif;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.d3-tip1 {
+  margin-top: 0px;
+  line-height: 1;
+  font-size: 12px;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 2px;
+}
+
+.d3-tip1:after {
+  box-sizing: border-box;
+  display: inline;
+  font-size: 10px;
+  width: 100%;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.8);
+  content: "\25BC";
+  position: absolute;
+  text-align: center;
+}
+
+.d3-tip1.n:after {
+  margin: -1px 0 0 0;
+  top: 100%;
+  left: 0;
+}
+
+.d3-tip2 {
+  margin-top: 0px;
+  line-height: 1;
+  font-size: 12px;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 2px;
+}
+
+.d3-tip2:after {
+  box-sizing: border-box;
+  display: inline;
+  font-size: 10px;
+  width: 100%;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.8);
+  content: "\25BC";
+  position: absolute;
+  text-align: center;
+}
+
+.d3-tip2.n:after {
+  margin: -1px 0 0 0;
+  top: 100%;
+  left: 0;
+}
+
+</style>
+<body>
+ <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">US Census Survey on Poverty</a>
+      </div>
+
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-right">
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Select Chart <span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="index-line.html">Q1: US Census on Poverty - Race -Line Chart  </a></li>
+              <li><a href="index-pie.html">Q1: US Census on Poverty - Race -Pie Chart  </a></li>
+              <li><a href="1.20.html">Q1: US Census on Poverty- Race-stack</a></li>
+              <li><a href="byStates2007withPercentage.html">Q2: US Census on Poverty - State Change </a></li>
+              <li><a href="q3-n.html">Q3: US Census on Poverty- Poor Number</a></li>
+              <li><a href="q3.html">Q3: US Census on Poverty- Poverty Rate</a></li>
+              <li><a href="q3_race.html">Q3: US Census on Poverty- Race</a></li>
+
+            </ul>
+          </li>
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+  </nav>
+
+
+<h5>US Census: Number of Poor and Poverty by State,2007</h5>
+<br>
+<div id="container1" style="position: relative; width: 65%; max-height: 450px;"></div>
+<br>
+<br>
+<h5>US Census: Number of Poor and Poverty by State,2010</h5>
+<br>
+<div id="container2" style="position: relative; width: 65%; max-height: 450px;"></div>
+<br>
+<br>
+<h5>US Census: Number of Poor and Poverty by State,2013</h5>
+<br>
+
+<div id="container3" style="position: relative; width: 65%; max-height: 450px;"></div>
+
+
+<script type="text/javascript" src="state2007.js"></script>
+<script type="text/javascript" src="state2010.js"></script>
+<script type="text/javascript" src="state2013.js"></script>
+
+</script>
+
+</body>
+</html>

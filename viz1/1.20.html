@@ -1,0 +1,207 @@
+<head>
+  <meta charset="utf-8">
+  <title>IV Project1</title>
+  <link rel="stylesheet" type="text/css" href="styles/main.min.css">
+  <!-- styles for drawing the SVG -->
+  <link rel="stylesheet" type="text/css" href="styles/d3.css">
+  <link rel="stylesheet" href="styles/d3.slider.css" />
+
+<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" />
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+
+body {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.bar {
+  fill: steelblue;
+}
+
+.x.axis path {
+  display: none;
+}
+.legend line {
+  stroke: #000;
+  shape-rendering: crispEdges;
+
+}
+
+</style>
+<body>
+
+   <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">US Census Survey on Poverty</a>
+      </div>
+
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-right">
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Select Chart <span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="index-line.html">Q1: US Census on Poverty - Race -Line Chart  </a></li>
+              <li><a href="index-pie.html">Q1: US Census on Poverty - Race -Pie Chart  </a></li>
+              <li><a href="1.20.html">Q1: US Census on Poverty- Race-stack</a></li>
+              <li><a href="byStates2007withPercentage.html">Q2: US Census on Poverty - State Change </a></li>
+              <li><a href="q3-n.html">Q3: US Census on Poverty- Poor Number</a></li>
+              <li><a href="q3.html">Q3: US Census on Poverty- Poverty Rate</a></li>
+              <li><a href="q3_race.html">Q3: US Census on Poverty- Race</a></li>
+
+
+            </ul>
+          </li>
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+  </nav>
+
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+
+var margin = {top:45 , right: 300, bottom: 30, left: 40},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+var x = d3.scale.ordinal()
+    .rangeRoundBands([0, width], .1);
+
+var y = d3.scale.linear()
+    .rangeRound([height, 0]);
+
+var color = d3.scale.ordinal()
+    .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b"]);
+
+var tempcolor
+
+var tooltip = d3.select ('body').append ('div')
+       .style('position','absolute')
+       .style('padding','0 10px')
+       .style('background','white')
+       .style('opacity','0')
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left")
+    .tickFormat(d3.format(".0%"));
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+d3.csv("v2.csv", function(error, data) {
+  if (error) throw error;
+  color.domain(d3.keys(data[0]).filter(function(key) { return key !== "Year"; }));
+
+  data.forEach(function(d) {
+    var y0 = 0;
+    d.races = color.domain().map(function(name) { return {name: name, y0: y0, y1: y0 += +d[name]}; });
+  d.races.forEach(function(d) { d.y0 /= y0; d.y1 /= y0; });
+  
+  });
+
+  x.domain(data.map(function(d) { return d.Year; }));
+
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+
+  svg.append("g")
+       .attr("class", "y axis")
+       .call(yAxis);
+       
+
+     
+  var Year = svg.selectAll(".Year")
+      .data(data)
+    .enter().append("g")
+      .attr("class", "Year")
+      .attr("transform", function(d) { return "translate(" + x(d.Year) + ",0)"; });
+
+  Year.selectAll("rect")
+      .data(function(d) { return d.races; })
+    .enter().append("rect")
+      .attr("width", x.rangeBand())
+      .attr("y", function(d) { return y(d.y1); })
+      .attr("height", function(d) { return y(d.y0) - y(d.y1); })
+      .style("fill", function(d) { return color(d.name); })
+      
+ 
+      .on ('mouseover',function (d){
+        tooltip.transition()
+		.style('opacity',.9)
+      tooltip.html(d)
+		.style('left',(d3.event.pageX - 20)+ 'px') 
+		.style('top',(d3.event.pageY + 15) + 'px') 
+		.text(function () {return d.name+ " "+(d.y1-d.y0)*100+'%'});
+		
+        tempcolor=this.style.fill;
+         d3.select(this)
+            .style ('opacity', .8)
+            .style ('fill','yellow')
+        
+      })
+      .on 
+      ('mouseout',function (d){
+         d3.select(this) 
+            .style ('opacity', 1)
+            .style ('fill',tempcolor)
+      })
+    
+      
+      ;
+   
+ var legend = svg.selectAll(".legend")
+      .data(color.domain().slice().reverse())
+    .enter().append("g")
+      .attr("class", "legend")
+      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+      
+ legend.append("rect")
+      .attr("x", width + 152)
+      .attr("width", 18)
+      .attr("height", 18)
+      .style("fill", color);
+
+  legend.append("text")
+      .attr("x", width + 143)
+      .attr("y", 9)
+      .attr("dy", ".35em")
+      .style("text-anchor", "end")
+      .text(function(d) { return d; });
+
+});
+
+</script>

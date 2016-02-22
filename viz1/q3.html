@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>IV Project1</title>
+  <link rel="stylesheet" type="text/css" href="styles/main.min.css">
+  <!-- styles for drawing the SVG -->
+  <link rel="stylesheet" type="text/css" href="styles/d3.css">
+  <link rel="stylesheet" href="styles/d3.slider.css" />
+
+<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" />
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="http://d3js.org/topojson.v1.min.js"></script>
+ 
+  <script src="http://datamaps.github.io/scripts/datamaps.all.min.js?v=1"></script>
+          <style type="text/css">
+
+        body {
+          font: 10px sans-serif;
+        }
+
+        .bar rect {
+          fill: steelblue;
+        }
+
+        .bar text.value {
+          fill: white;
+        }
+
+        .axis {
+          shape-rendering: crispEdges;
+        }
+
+        .axis path {
+          fill: none;
+        }
+
+        .x.axis line {
+          stroke: #fff;
+          stroke-opacity: .8;
+        }
+
+        .y.axis path {
+          stroke: black;
+        }
+        
+
+            </style>
+  </head>
+
+<body>
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">US Census Survey on Poverty</a>
+      </div>
+
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-right">
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Select Chart <span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="index-line.html">Q1: US Census on Poverty - Race -Line Chart  </a></li>
+              <li><a href="index-pie.html">Q1: US Census on Poverty - Race -Pie Chart  </a></li>
+              <li><a href="1.20.html">Q1: US Census on Poverty- Race-stack</a></li>
+              <li><a href="byStates2007withPercentage.html">Q2: US Census on Poverty - State Change </a></li>
+              <li><a href="q3-n.html">Q3: US Census on Poverty- Poor Number</a></li>
+              <li><a href="q3.html">Q3: US Census on Poverty- Poverty Rate</a></li>
+              <li><a href="q3_race.html">Q3: US Census on Poverty- Race</a></li>
+
+      </ul>
+          </li>
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+  </nav>
+
+
+  
+<p>
+<label for="year">Year :</label>
+<input type="text" id="year" style="border:0; color:#f6931f; font-weight:bold; " />
+</p>
+<div  id="slider" style="position: relative; left:20px; width: 1000px;"></div>
+
+
+  <div class="container-fluid">
+    <div class="row-fluid">
+      <h5>US: Poverty Rate By each State </h5>
+     </div> 
+    </div>
+
+  
+  <div id="container1" style="position: relative; width: 65%; max-height: 450px;"></div>
+  
+     
+     <script type="text/javascript" src="q3.js"></script>
+
+
+     <footer class="container-fluid">
+    <div class="row-fluid">
+      <p>
+        Poverty Data obtained from: <a href="https://www.census.gov/hhes/www/poverty/data/historical/people.html">US Census Bureau</a>
+        <br>
+        Specific survey measures are provided here: <a href="https://www.census.gov/hhes/www/poverty/about/overview/measure.html" >Census Poverty Measure</a> 
+        <br>
+         World Map created with <a href="http://datamaps.github.io/">Datamaps</a>
+        <br>
+        
+      </p>
+    </div>
+  </footer>
+
+</body>

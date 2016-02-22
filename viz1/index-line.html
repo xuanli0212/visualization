@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="styles/nv.d3.css" rel="stylesheet"/>
+<meta charset="utf-8">
+<title>IV Project1</title>
+<link rel="stylesheet" type="text/css" href="styles/main.min.css">
+  <!-- styles for drawing the SVG -->
+<link rel="stylesheet" type="text/css" href="styles/d3.css">
+<link rel="stylesheet" href="styles/d3.slider.css" />
+
+<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" />
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+<script src="d3.v3.min.js"></script>
+<script src="nv.d3.min.js"></script>
+  <meta charset="utf-8">
+  <title>JS Bin</title>
+<style>
+table {
+  border-collapse:collapse;
+}
+td {
+  border:solid 1px;
+  
+}
+#chart svg {
+  width:80%;
+  height:500px;
+}
+</style>
+</head>
+<body>
+
+   <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">US Census Survey on Poverty</a>
+      </div>
+
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-right">
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Select Chart <span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="index-line.html">Q1: US Census on Poverty - Race -Line Chart  </a></li>
+              <li><a href="index-pie.html">Q1: US Census on Poverty - Race -Pie Chart  </a></li>
+              <li><a href="1.20.html">Q1: US Census on Poverty- Race-stack</a></li>
+              <li><a href="byStates2007withPercentage.html">Q2: US Census on Poverty - State Change </a></li>
+              <li><a href="q3-n.html">Q3: US Census on Poverty- Poor Number</a></li>
+              <li><a href="q3.html">Q3: US Census on Poverty- Poverty Rate</a></li>
+              <li><a href="q3_race.html">Q3: US Census on Poverty- Race</a></li>
+
+            </ul>
+          </li>
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+  </nav>
+
+
+    <select id="RacesSelector">
+      <option id="first" value="Total">Total</option>
+      <option value="White Alone">White Alone</option>
+      <option value="Black Alone">Black Alone</option>
+      <option value="Asian Alone">Asian Alone</option>
+      <option value="Others or more races">Others or more races</option>
+  </select>
+
+  <div id="chart"><svg></svg></div>
+  <div id="datatable"></div>
+<script>
+<!--load Race codes-->
+  var d = {};
+  var col_name = new Array();
+
+  d3.csv("data/Racedata.csv", function(csvdata) {
+    csvdata.forEach(function(data) {
+      var name = data.Races;
+      col_name.push(name);
+      
+      var yearData = new Array();
+      for (var i=0; i<12; i++) {
+        var tuple = new Array();
+        tuple[0] = 2002+i+"";
+        tuple[1] = parseFloat(data[2002+i+""]);
+        yearData[i] = tuple;
+      }
+
+      d[name] = yearData;
+      
+    });
+  });
+
+  d3.select("#first").attr("selected", true);
+
+  
+window.onload = function() {
+
+  //create dropdown of races
+  var RacesSel = d3.select("#RacesSelector")
+                   .on("change",load);
+
+  loadAll();
+
+  function load() {
+    if (RacesSel.node().value == "Total") {
+      loadAll();
+    } else {
+      var data = d[RacesSel.node().value];
+      loadOne(data);
+    }
+  }
+
+  function loadOne(data) {
+
+    var column_names = ['Date', 'Value'];
+
+    // render the table
+    tabulate(data, column_names);
+
+    nv.addGraph(function() {
+      var chart = nv.models.lineChart()
+        .margin({
+          top: 50, left: 100, bottom: 100, right: 100,
+        })
+        .useInteractiveGuideline(false)
+        .transitionDuration(350)
+        .showLegend(true)
+        .showYAxis(true)
+        .showXAxis(true);
+
+      chart.yAxis
+        .axisLabel(RacesSel.node().value)
+        .tickFormat(d3.format('.02f'));
+
+      var chartData = [
+        {
+          values: [], //values - represents the array of {x,y} data points
+          key: "", //key  - the name of the series.
+          color: '#ff7f0e' //color - optional: choose your own line color.
+        }
+      ];
+
+      var roots = data.map(function(e) {
+        return {
+          x: e[0],
+          y: e[1]
+        };
+      });
+
+      //push it to chartData;
+      //change index or wrap in loop if more datasets graphed on the same chart, e.g. emissions from fossil, gas, etc.
+      chartData[0].values = roots;
+
+      d3.select('#chart svg') //select the <svg> element you want to render the chart in.   
+        .datum(chartData) //populate the <svg> element with chart data...
+        .call(chart); //render the chart
+
+      //Update the chart when window resizes.
+      nv.utils.windowResize(function() {
+        chart.update();
+      });
+      return chart;
+    });
+  }
+
+  nv.dev = false; //surpres nvd3 console logs
+
+// 
+function loadAll() {
+
+    var column_names = ['Date', 'Value'];
+
+    // render the table
+    // tabulate(d["White Alone"], column_names);
+
+    nv.addGraph(function() {
+      var chart = nv.models.lineChart()
+        .margin({
+          top: 50, left: 100, bottom: 100, right: 100,
+        })
+        .useInteractiveGuideline(false)
+        .transitionDuration(350)
+        .showLegend(true)
+        .showYAxis(true)
+        .showXAxis(true);
+
+      chart.yAxis
+        .axisLabel(RacesSel.node().value)
+        .tickFormat(d3.format('.02f'));
+
+      var chartData = [
+        {
+          values: d["White Alone"], //values - represents the array of {x,y} data points
+          key: "WA", //key  - the name of the series.
+          color: '#ff7f0e' //color - optional: choose your own line color.
+        },
+        {
+          values: d["Black Alone"], //values - represents the array of {x,y} data points
+          key: "BA", //key  - the name of the series.
+          color: '#FFD700' //color - optional: choose your own line color.
+        },
+        {
+          values: d["Asian Alone"], //values - represents the array of {x,y} data points
+          key: "AA", //key  - the name of the series.
+          color: '#008B8B' //color - optional: choose your own line color.
+        },
+        {
+          values: d["Others or more races"], //values - represents the array of {x,y} data points
+          key: "Others", //key  - the name of the series.
+          color: '#FC5656' //color - optional: choose your own line color.
+        }
+      ];
+
+      for (var i=0; i<4; i++) {
+        chartData[i].values = chartData[i].values.map(function(e) {
+          return {
+            x: e[0],
+            y: e[1]
+          };
+        });
+      }
+
+      d3.select('#chart svg') //select the <svg> element you want to render the chart in.   
+        .datum(chartData) //populate the <svg> element with chart data...
+        .call(chart); //render the chart
+
+      //Update the chart when window resizes.
+      nv.utils.windowResize(function() {
+        chart.update();
+      });
+      return chart;
+    });
+  }
+  //create table from d3 data [[,][,],..]
+  function tabulate(data, columns) {
+
+      //remove existing table (if), create new one
+      d3.select("#datatable").selectAll("table").remove();
+      var table = d3.select("#datatable").append("table"),
+          thead = table.append("thead"),
+          tbody = table.append("tbody");
+
+    //append the header row
+    thead.append("tr")
+      .selectAll("th")
+      .data(columns)
+      .enter()
+      .append("th")
+      .text(function(column) {
+        return column;
+      });
+
+
+    // create a row for each object in the data
+    var rows = tbody.selectAll("tr")
+      .data(data)
+      .enter()
+      .append("tr");
+
+
+    // create a cell in each row for each column
+    var cells = rows.selectAll("td")
+      .data(function(row) {
+        return columns.map(function(column) {
+          return {
+            column: column,
+            value: row
+          };
+        });
+      })
+      .enter()
+      .append("td")
+      .text(function(d, i) {
+        return d.value[i];
+      });
+    
+    //firstgo=false;
+    //return table;
+  }
+};
+</script>
+</body>
+</html>
